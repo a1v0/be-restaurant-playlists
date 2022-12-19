@@ -2,3 +2,5 @@
 
 SELECT * FROM playlists;
 SELECT * FROM users;
+SELECT * FROM restaurants;
+SELECT * FROM votes;

@@ -11,3 +11,19 @@ You are now connected to database "restaurant_playlists_test" as user "musab".
  ymca2@restaurant-playlists.com | ymca2    | https://images.ctfassets.net/hrltx12pl8hq/3j5RylRv1ZdswxcBaMi0y7/b84fa97296bd2350db6ea194c0dce7db/Music_Icon.jpg
 (2 rows)
 
+ restaurant_id | playlist_id |          place_id           
+---------------+-------------+-----------------------------
+             1 |           1 | ChIJ3-SMG6FeeUgRGKtBhlH0fhY
+             2 |           1 | ChIJwf5pV8bme0gRWrquuGBndA8
+             3 |           1 | ChIJbQIhL6FeeUgRd4YGS3CdRgk
+             4 |           2 | ChIJP8J3ZIVeeUgRlzmWlDEjXPc
+             5 |           2 | ChIJK9qnyBlceUgR0ahqyr73-qs
+             6 |           2 | ChIJmWR08-5deUgRIPZKe0zjFEg
+(6 rows)
+
+ vote_id | playlist_id | vote_count 
+---------+-------------+------------
+       1 |           1 |          4
+       2 |           2 |          1
+(2 rows)
+
