@@ -21,3 +21,7 @@ Use this command to install the required packages
 
 confirm that Flask and psychopg2 are installed 
 
+# New Packages 
+When installing new Packages create a requirements file by running this command 
+`python -m pip freeze > requirements.txt`
+
