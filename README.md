@@ -28,5 +28,9 @@ When installing new Packages create a requirements file by running this command
 
 # Seeding database
 
-To create the database run the following command:
+To create the database run the following command in the terminal ensuring you are in the repo directory:
 `psql -f ./db/setup.sql`
+
+# Query tester
+To test a query run the following command in the root dir of the repo:
+`psql -f db/query-tester.sql > db/output.txt`
