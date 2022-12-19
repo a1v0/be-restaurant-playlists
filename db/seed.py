@@ -1,14 +1,5 @@
-import psycopg2
 from test_data import playlists, users, restaurants, votes
-
-
-connection = psycopg2.connect(
-    # *** TO DO *** Make database dynamic depending on environment
-    database="restaurant_playlists_test"
-    # host = "", user = "", password = ""
-)
-
-connection.autocommit = True
+from connection import connection
 
 
 def create_users_table(cursor) -> None:
