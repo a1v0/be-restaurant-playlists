@@ -4,8 +4,8 @@ from db.connection import connection
 app = Flask(__name__)
 
 
-@app.route("/api")
-def index():
+@app.route("/api", methods=["GET"])
+def all_playlists():
     cursor = connection.cursor()
     cursor.execute("SELECT * FROM playlists;")
     playlists = cursor.fetchall()
