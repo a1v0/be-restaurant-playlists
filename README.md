@@ -26,6 +26,12 @@ Confirm that Flask and psychopg2 are installed
 When installing new packages, update the requirements file by running this command
 `python -m pip freeze > requirements.txt`
 
+## Setting environment variables
+
+Create two `.env` files: `.env.test` and `.env.development`.
+
+The .development file should contain only `PG_DATABASE=restaurant_playlists`, while .test should contain `PG_DATABASE=restaurant_playlists_test`
+
 ## Seeding database
 
 To create the database run the following command in the terminal, ensuring you are in the repo's root directory:
