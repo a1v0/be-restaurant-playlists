@@ -127,5 +127,6 @@ def seed(playlists, users, restaurants, votes):
                 (vote["playlist_id"], vote["vote_count"]),
             )
 
+    cursor.close()
     connection.close()
     pool.closeall()
