@@ -1,11 +1,9 @@
 import psycopg2
 from os import environ
 
-
-if environ["PYTEST_CURRENT_TEST"]:
+if "PYTEST_CURRENT_TEST" in environ:
     environ["PG_DATABASE"] = "restaurant_playlists_test"
 else:
-    # this database doesn't exist yet...
     environ["PG_DATABASE"] = "restaurant_playlists"
     # needs provision for production environment
 
