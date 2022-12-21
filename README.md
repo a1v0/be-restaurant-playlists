@@ -7,8 +7,8 @@ Y, M, C, A
 
 An app for Foodies
 
-- Make eat-lists of all the food places on your radar
-- Find inspiration from other users eat-lists
+-   Make eat-lists of all the food places on your radar
+-   Find inspiration from other users eat-lists
 
 ## Installation Process
 
@@ -61,27 +61,38 @@ This will put any query outputs into the text document.
 
 ## PyTest Notes
 
-`assert x == expect, "print this if it fails"`
+### Running a test
+
+To run a test, you must be in the root directory and you must use this command:
+
+```shell
+$ PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
+```
+
+Pytest by default has access only to its own directory. The command above allows it access to all files in the root
+
+### Preparing a test
 
 The following line is a replacement of the (`.test`) in JS:
 
 ```python
 def test_file1_method1():
+    assert x == expect, "print this if it fails"
 ```
 
 Use snake case when naming Python files.
 
 By default pytest only identifies the file names starting with `test_` or ending with `_test`
 
-- `test_login.py` - valid
-- `login_test.py` - valid
-- `testlogin.py` - invalid
-- `logintest.py` - invalid
+-   `test_login.py` - valid
+-   `login_test.py` - valid
+-   `testlogin.py` - invalid
+-   `logintest.py` - invalid
 
 The python version of `.only` is a keyword search
 
-- `py.test -k <file_name> -v`
-- `py.test -k method1 -v` (in this case it will search any test containing `method1`)
+-   `py.test -k <file_name> -v`
+-   `py.test -k method1 -v` (in this case it will search any test containing `method1`)
 
 To replace a describe block in pytest, use:
 
@@ -119,7 +130,7 @@ def test_add(input1, input2, output):
 import pytest
 @pytest.mark.skip
 def test_add_1():
-    assert 100 + 200 == 400, "failed" 
+    assert 100 + 200 == 400, "failed"
 ```
 
 ### Pytest Framework Testing an API

@@ -1,20 +1,20 @@
-from flask import Flask, jsonify
-from db.connection import connection
+from flask import Flask, jsonify, request
+from db.connection import connection, cursor
+from flask_cors import CORS
+import json
 
 app = Flask(__name__)
+CORS(app)
 
-
-@app.route("/api", methods=["GET"])
+@app.route("/api/playlists", methods=["GET"])
 def all_playlists():
-    cursor = connection.cursor()
-    cursor.execute("SELECT * FROM playlists;")
-    playlists = cursor.fetchall()
-    cursor.close()
-    connection.close()
-    return jsonify(playlists)
+    if request.method == "GET":
+        cursor.execute("SELECT * FROM playlists;")
+        playlists = cursor.fetchall()
+        results = json.dumps({"playlists":playlists})
+        cursor.close()
+        connection.close()
+        return results
 
 
-# this is only necessary for Cyrus, if he can't fix his PC
-# if __name__ == "__main__":
-#     print(__name__)
-#     app.run(debug=True, port=8001)
+
