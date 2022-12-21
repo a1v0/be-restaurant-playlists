@@ -14,19 +14,9 @@ def test_app():
     test_app.config.update({
         "TESTING": True,
     })
-    # other setup can go here
-    try: 
-        seed(playlists, users, restaurants, votes)
-    except: 
-        try:
-            cursor.close()
-        except: 
-            connection.close()
-            connection = pool.getconn()
-        cursor = connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor)
+    seed(playlists, users, restaurants, votes)
     yield test_app
 
-    # clean up / reset resources here
 @pytest.fixture()
 def client(test_app):
     return test_app.test_client()
