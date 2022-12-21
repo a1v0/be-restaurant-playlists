@@ -13,8 +13,8 @@ def all_playlists():
         playlists = cursor.fetchall()
         results = json.dumps({"playlists":playlists})
         loaded_results = json.loads(results)
-        cursor.close()
-        connection.close()
+        # cursor.close()
+        # connection.close()
         return loaded_results
 
 
