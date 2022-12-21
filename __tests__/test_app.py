@@ -1,8 +1,10 @@
 import pytest
 from db.seed import seed
-# from db.seed_data.test_data import playlists, users, restaurants, votes
-# from db.connection import connection, pool
-# from app import all_playlists
+from db.seed_data.test_data import playlists, users, restaurants, votes
+from db.connection import connection, pool
+from app import all_playlists
+
+seed()
 
 # PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
 
