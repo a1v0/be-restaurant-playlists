@@ -1,4 +1,4 @@
-from connection import connection, pool
+from db.connection import connection, pool, cursor
 
 
 def seed(playlists, users, restaurants, votes):
@@ -15,21 +15,21 @@ def seed(playlists, users, restaurants, votes):
             """
         )
 
-    with connection.cursor() as cursor:
-        create_users_table(cursor)
-        for user in users:
-            cursor.execute(
-                """
-                    INSERT INTO users
-                        (
-                        user_email, nickname, avatar_url
-                        ) 
-                    VALUES (
-                    %s, %s, %s
-                    )
-                """,
-                (user["user_email"], user["nickname"], user["avatar_url"]),
-            )
+
+    create_users_table(cursor)
+    for user in users:
+        cursor.execute(
+            """
+                INSERT INTO users
+                    (
+                    user_email, nickname, avatar_url
+                    ) 
+                VALUES (
+                %s, %s, %s
+                )
+            """,
+            (user["user_email"], user["nickname"], user["avatar_url"]),
+        )
 
     def create_playlists_table(cursor) -> None:
         cursor.execute(
@@ -47,27 +47,26 @@ def seed(playlists, users, restaurants, votes):
             """
         )
 
-    with connection.cursor() as cursor:
-        create_playlists_table(cursor)
-        for playlist in playlists:
-            cursor.execute(
-                """
-                    INSERT INTO playlists
-                        (
-                        name, description, location, cuisine, owner_email
-                        ) 
-                    VALUES (
-                    %s, %s, %s, %s, %s
-                    )
-                """,
-                (
-                    playlist["name"],
-                    playlist["description"],
-                    playlist["location"],
-                    playlist["cuisine"],
-                    playlist["owner_email"],
-                ),
-            )
+    create_playlists_table(cursor)
+    for playlist in playlists:
+        cursor.execute(
+            """
+                INSERT INTO playlists
+                    (
+                    name, description, location, cuisine, owner_email
+                    ) 
+                VALUES (
+                %s, %s, %s, %s, %s
+                )
+            """,
+            (
+                playlist["name"],
+                playlist["description"],
+                playlist["location"],
+                playlist["cuisine"],
+                playlist["owner_email"],
+            ),
+        )
 
     def create_restaurants_table(cursor) -> None:
         cursor.execute(
@@ -82,21 +81,20 @@ def seed(playlists, users, restaurants, votes):
             """
         )
 
-    with connection.cursor() as cursor:
-        create_restaurants_table(cursor)
-        for restaurant in restaurants:
-            cursor.execute(
-                """
-                    INSERT INTO restaurants
-                        (
-                        playlist_id, place_id
-                        ) 
-                    VALUES (
-                    %s, %s
-                    )
-                """,
-                (restaurant["playlist_id"], restaurant["place_id"]),
-            )
+    create_restaurants_table(cursor)
+    for restaurant in restaurants:
+        cursor.execute(
+            """
+                INSERT INTO restaurants
+                    (
+                    playlist_id, place_id
+                    ) 
+                VALUES (
+                %s, %s
+                )
+            """,
+            (restaurant["playlist_id"], restaurant["place_id"]),
+        )
 
     def create_votes_table(cursor) -> None:
         cursor.execute(
@@ -111,21 +109,20 @@ def seed(playlists, users, restaurants, votes):
             """
         )
 
-    with connection.cursor() as cursor:
-        create_votes_table(cursor)
-        for vote in votes:
-            cursor.execute(
-                """
-                    INSERT INTO votes
-                        (
-                        playlist_id, vote_count
-                        ) 
-                    VALUES (
-                    %s, %s
-                    )
-                """,
-                (vote["playlist_id"], vote["vote_count"]),
-            )
+    create_votes_table(cursor)
+    for vote in votes:
+        cursor.execute(
+            """
+                INSERT INTO votes
+                    (
+                    playlist_id, vote_count
+                    ) 
+                VALUES (
+                %s, %s
+                )
+            """,
+            (vote["playlist_id"], vote["vote_count"]),
+        )
 
     cursor.close()
     connection.close()
