@@ -1,7 +1,10 @@
 from flask import Flask, jsonify
 from db.connection import connection
+from flask_cors import CORS
+
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route("/api", methods=["GET"])
