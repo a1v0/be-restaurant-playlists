@@ -23,13 +23,14 @@
 import os
 import sys
 
-current = os.path.dirname(os.path.realpath(__file__))
+# current = os.path.dirname(os.path.realpath(__file__))
 
-parent = os.path.dirname(current)
+# parent = os.path.dirname(current)
 
-sys.path.append(parent)
+# sys.path.append(parent)
 
-import db.seed
+import db
+
 import db.connection
 
-db.seed.seed()
+# db.seed.seed()
