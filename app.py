@@ -12,9 +12,10 @@ def all_playlists():
         cursor.execute("SELECT * FROM playlists;")
         playlists = cursor.fetchall()
         results = json.dumps({"playlists":playlists})
+        loaded_results = json.loads(results)
         cursor.close()
         connection.close()
-        return results
+        return loaded_results
 
 
 

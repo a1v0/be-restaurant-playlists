@@ -7,8 +7,8 @@ Y, M, C, A
 
 An app for Foodies
 
--   Make eat-lists of all the food places on your radar
--   Find inspiration from other users eat-lists
+- Make eat-lists of all the food places on your radar
+- Find inspiration from other users eat-lists
 
 ## Installation Process
 
@@ -59,6 +59,16 @@ psql -f db/query-tester.sql > db/output.txt
 
 This will put any query outputs into the text document.
 
+## Useful Flask Commands
+
+### Run flask with auto-refresh
+
+Use this command when running the flask app to enable auto-refresh of any changes to the code
+
+```shell
+flask --app <example_app.py> --debug run
+```
+
 ## PyTest Notes
 
 ### Running a test
@@ -84,15 +94,15 @@ Use snake case when naming Python files.
 
 By default pytest only identifies the file names starting with `test_` or ending with `_test`
 
--   `test_login.py` - valid
--   `login_test.py` - valid
--   `testlogin.py` - invalid
--   `logintest.py` - invalid
+- `test_login.py` - valid
+- `login_test.py` - valid
+- `testlogin.py` - invalid
+- `logintest.py` - invalid
 
 The python version of `.only` is a keyword search
 
--   `py.test -k <file_name> -v`
--   `py.test -k method1 -v` (in this case it will search any test containing `method1`)
+- `py.test -k <file_name> -v`
+- `py.test -k method1 -v` (in this case it will search any test containing `method1`)
 
 To replace a describe block in pytest, use:
 
