@@ -59,3 +59,29 @@ def specific_playlist(playlist_id):
         return jsonify({"msg": "playlist not found"}), 404
     else:
         return loaded_results
+
+
+@app.route("/api/users", methods=["POST"])
+def users():
+    post_body = request.get_json()
+    if (
+        post_body.get("user_email") is None
+        or post_body.get("nickname") is None
+        or post_body.get("avatar_url") is None
+    ):
+        return jsonify({"msg": "Invalid Request Body"}),400
+
+    if request.method == "POST":
+        cursor.execute(
+            """
+        INSERT INTO users (user_email, nickname, avatar_url)
+        VALUES
+        (%s,%s,%s)
+        RETURNING *;
+        """,
+            (post_body["user_email"], post_body["nickname"], post_body["avatar_url"]),
+        )
+    new_user = cursor.fetchall()
+    results = json.dumps({"user": new_user[0]})
+    loaded_results = json.loads(results)
+    return loaded_results, 201
