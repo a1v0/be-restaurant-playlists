@@ -60,12 +60,6 @@ def test_get_playlists_keys(client):
             vote_number2 = float(vote_count_values[i+1])
             assert vote_number1 >= vote_number2, "test_failed"
             count = count + 1
-            
-        
-    
-# for loop to get each value in the array
-# compare each value with the next value
-# may need to coerce into a number
     
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning

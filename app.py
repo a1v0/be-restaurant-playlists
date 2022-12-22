@@ -11,7 +11,7 @@ CORS(app)
 def all_playlists():
     if request.method == "GET":
         cursor.execute("""
-        SELECT playlists.*, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
+        SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
         LEFT JOIN votes
         ON playlists.playlist_id = votes.playlist_id 
         LEFT JOIN users
