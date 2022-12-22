@@ -19,8 +19,12 @@ def all_playlists():
         return loaded_results
 
 
-@app.route("/api/playlists/<int:playlist_id>", methods=["GET"])
+@app.route("/api/playlists/<playlist_id>", methods=["GET"])
 def specific_playlist(playlist_id):
+    try:
+        int(playlist_id)
+    except:
+        return jsonify({"msg": "invalid playlist id"}), 400
     if request.method == "GET":
         cursor.execute(
             """
@@ -41,10 +45,10 @@ def specific_playlist(playlist_id):
             """,
             [playlist_id],
         )
-        playlist = cursor.fetchall()
-        results = json.dumps({"playlist": playlist})
-        loaded_results = json.loads(results)
-        if len(loaded_results["playlist"]) == 0:
-            return jsonify({"msg": "playlist not found"}), 404
-        else:
-            return loaded_results
+    playlist = cursor.fetchall()
+    results = json.dumps({"playlist": playlist})
+    loaded_results = json.loads(results)
+    if len(loaded_results["playlist"]) == 0:
+        return jsonify({"msg": "playlist not found"}), 404
+    else:
+        return loaded_results
