@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request, abort, make_response
+from flask import Flask, jsonify, request
 from db.connection import connection, cursor
 from flask_cors import CORS
 import json
@@ -35,7 +35,7 @@ def specific_playlist(playlist_id):
                     location,
                     cuisine,
                     description,
-                    playlists.playlist_id    
+                    playlists.playlist_id
                 FROM playlists
                 INNER JOIN restaurants
                 ON playlists.playlist_id = restaurants.playlist_id

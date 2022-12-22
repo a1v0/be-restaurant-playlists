@@ -32,7 +32,6 @@ def runner(test_app):
 
 def test_request_example(client):
     response = client.get("/api/playlists")
-    # print(response.data)
     assert response.status == "200 OK", "Test Failed"
 
 
@@ -41,8 +40,10 @@ def test_request_specific_playlist_success(client):
     response = client.get("/api/playlists/1")
     playlistBytes = response.data
     playlist = json.loads(playlistBytes.decode("utf-8"))
+
     assert response.status == "200 OK", "incorrect http response"
     assert type(playlist["playlist"]) == list, "Test failed"
+
     for playlist in playlist["playlist"]:
         assert playlist["playlist_id"] == 1, "Test failed"
         assert "name" in playlist, "Test failed"
@@ -57,6 +58,7 @@ def test_request_specific_playlist_valid_but_nonexistent_playlist_id(client):
     response = client.get("/api/playlists/1000000")
     playlistBytes = response.data
     playlist = json.loads(playlistBytes.decode("utf-8"))
+
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert playlist["msg"] == "playlist not found"
 
@@ -65,5 +67,6 @@ def test_request_specific_playlist_invalid_playlist_id(client):
     response = client.get("/api/playlists/sdfghjkl")
     playlistBytes = response.data
     playlist = json.loads(playlistBytes.decode("utf-8"))
+
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     assert playlist["msg"] == "invalid playlist id"
