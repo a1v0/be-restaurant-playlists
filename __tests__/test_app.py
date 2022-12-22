@@ -49,17 +49,25 @@ def test_get_playlists_keys(client):
     response = client.get("/api/playlists")
     result = create_dict(response.data)
     array = result["playlists"]
+    vote_count_values = []
+    count = 0
     assert response.status == "200 OK", "Test Failed"
     for playlist in array:
-        assert "cuisine" in playlist, "test failed"
-        assert "description" in playlist, "test failed"
-        assert "location" in playlist, "test failed"
-        assert "name" in playlist, "test failed"
-        assert "owner_email" in playlist, "test failed"
-        assert "playlist_id" in playlist, "test failed"
-        assert "vote_count" in playlist, "test failed"
-        assert "nickname" in playlist, "test failed"
-
+        assert 'cuisine' in playlist, "test failed"
+        assert 'description' in playlist, "test failed"
+        assert 'location' in playlist, "test failed"
+        assert 'name' in playlist, "test failed"
+        assert 'owner_email' not in playlist, "test failed"
+        assert 'playlist_id' in playlist, "test failed"
+        assert 'vote_count' in playlist, "test failed"
+        assert 'nickname' in playlist, "test failed"
+        vote_count_values.append(playlist["vote_count"])
+    for i in range(len(vote_count_values)):
+        if count != len(vote_count_values) - 1:
+            vote_number1 = float(vote_count_values[i])
+            vote_number2 = float(vote_count_values[i+1])
+            assert vote_number1 >= vote_number2, "test_failed"
+            count = count + 1
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
 def test_request_specific_playlist_success(client):
