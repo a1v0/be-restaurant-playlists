@@ -32,22 +32,32 @@ def runner(test_app):
 
 def test_request_example(client):
     response = client.get("/api/playlists")
-    print(response.data)
+    # print(response.data)
     assert response.status == "200 OK", "Test Failed"
 
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
-def test_request_specific_playlist(client):
+def test_request_specific_playlist_success(client):
     response = client.get("/api/playlists/1")
     playlistBytes = response.data
     playlist = json.loads(playlistBytes.decode("utf-8"))
-    print(playlist)
-    assert type(playlist["playlist"]) == list
+    # print(playlist)
+    assert response.status == "200 OK", "incorrect http response"
+    assert type(playlist["playlist"]) == list, "Test failed"
     for playlist in playlist["playlist"]:
-        assert playlist["playlist_id"] == 1
-        assert "name" in playlist
-        assert "place_id" in playlist
-        assert "location" in playlist
-        assert "cuisine" in playlist
-        assert "owner_nickname" in playlist
-        assert "description" in playlist
+        assert playlist["playlist_id"] == 1, "Test failed"
+        assert "name" in playlist, "Test failed"
+        assert "place_id" in playlist, "Test failed"
+        assert "location" in playlist, "Test failed"
+        assert "cuisine" in playlist, "Test failed"
+        assert "owner_nickname" in playlist, "Test failed"
+        assert "description" in playlist, "Test failed"
+
+
+def test_request_specific_playlist_valid_but_nonexistent_playlist_id(client):
+    response = client.get("/api/playlists/10")
+    print(response, "pbs")
+    playlistBytes = response.data
+    playlist = json.loads(playlistBytes.decode("utf-8"))
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    assert playlist["msg"] == "playlist not found"
