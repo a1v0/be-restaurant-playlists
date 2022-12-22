@@ -48,6 +48,7 @@ def specific_playlist(playlist_id):
     playlist = cursor.fetchall()
     results = json.dumps({"playlist": playlist})
     loaded_results = json.loads(results)
+    # *** TO DO *** ensure that it's not possible to submit an empty playlist to the site, so that there will always be content to be displayed, so long as the playlist_id is valid
     if len(loaded_results["playlist"]) == 0:
         return jsonify({"msg": "playlist not found"}), 404
     else:
