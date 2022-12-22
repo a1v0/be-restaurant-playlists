@@ -1,12 +1,16 @@
+from os import environ
 import pytest
+environ["PYTEST_CURRENT_TEST"]= "" # This ensures that the connection file selects the correct environment
 from db.seed import seed
 from db.seed_data.test_data import playlists, users, restaurants, votes
-from db.connection import connection, pool, cursor
 from app import app
 import json
 from ast import literal_eval
 
-# PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
+
+
+# PYTHONPATH=$(pwd) py.test -rP
+#  <optional keyword searches with -k -v>
 
 # utility functions
 
@@ -41,7 +45,6 @@ def test_get_playlists_keys(client):
     response = client.get("/api/playlists")
     result = create_dict(response.data)
     array = result["playlists"]
-    print(array)
     assert response.status == "200 OK", "Test Failed"
     for playlist in array:
         assert 'cuisine' in playlist, "test failed"
@@ -86,6 +89,6 @@ def test_request_specific_playlist_invalid_playlist_id(client):
     response = client.get("/api/playlists/sdfghjkl")
     playlistBytes = response.data
     playlist = json.loads(playlistBytes.decode("utf-8"))
-
+    
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     assert playlist["msg"] == "invalid playlist id"
