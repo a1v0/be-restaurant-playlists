@@ -42,22 +42,25 @@ def test_get_playlists_keys(client):
     result = create_dict(response.data)
     array = result["playlists"]
     vote_count_values = []
+    count = 0
     assert response.status == "200 OK", "Test Failed"
     for playlist in array:
         assert 'cuisine' in playlist, "test failed"
         assert 'description' in playlist, "test failed"
         assert 'location' in playlist, "test failed"
         assert 'name' in playlist, "test failed"
-        assert 'owner_email' in playlist, "test failed"
+        assert 'owner_email' not in playlist, "test failed"
         assert 'playlist_id' in playlist, "test failed"
         assert 'vote_count' in playlist, "test failed"
         assert 'nickname' in playlist, "test failed"
         vote_count_values.append(playlist["vote_count"])
-    assert vote_count_values == ['5.0', '4.0', '1.0'], "test failed"
     for i in range(len(vote_count_values)):
-        vote_number = float(vote_count_values[i])
-        if vote_count_values[i] > 
-            print("its greater than or equal to")
+        if count != len(vote_count_values) - 1:
+            vote_number1 = float(vote_count_values[i])
+            vote_number2 = float(vote_count_values[i+1])
+            assert vote_number1 >= vote_number2, "test_failed"
+            count = count + 1
+            
         
     
 # for loop to get each value in the array
