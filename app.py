@@ -10,6 +10,7 @@ CORS(app)
 @app.route("/api/playlists", methods=["GET"])
 def all_playlists():
     if request.method == "GET":
+        print(request.args.get("location"))
         cursor.execute("""
         SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
         LEFT JOIN votes

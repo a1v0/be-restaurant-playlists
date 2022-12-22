@@ -5,8 +5,6 @@ from db.seed import seed
 from db.seed_data.test_data import playlists, users, restaurants, votes
 from app import app
 import json
-from ast import literal_eval
-
 
 # PYTHONPATH=$(pwd) py.test -rP
 # <optional keyword searches with -k -v>
@@ -16,7 +14,7 @@ from ast import literal_eval
 
 
 def create_dict(byte):
-    return literal_eval(byte.decode("utf-8"))
+    return json.loads(byte.decode("utf-8"))
 
 
 # tests
@@ -53,14 +51,14 @@ def test_get_playlists_keys(client):
     count = 0
     assert response.status == "200 OK", "Test Failed"
     for playlist in array:
-        assert 'cuisine' in playlist, "test failed"
-        assert 'description' in playlist, "test failed"
-        assert 'location' in playlist, "test failed"
-        assert 'name' in playlist, "test failed"
-        assert 'owner_email' not in playlist, "test failed"
-        assert 'playlist_id' in playlist, "test failed"
-        assert 'vote_count' in playlist, "test failed"
-        assert 'nickname' in playlist, "test failed"
+        assert "cuisine" in playlist, "test failed"
+        assert "description" in playlist, "test failed"
+        assert "location" in playlist, "test failed"
+        assert "name" in playlist, "test failed"
+        assert "owner_email" not in playlist, "test failed"
+        assert "playlist_id" in playlist, "test failed"
+        assert "vote_count" in playlist, "test failed"
+        assert "nickname" in playlist, "test failed"
         vote_count_values.append(playlist["vote_count"])
     for i in range(len(vote_count_values)):
         if count != len(vote_count_values) - 1:
@@ -68,6 +66,21 @@ def test_get_playlists_keys(client):
             vote_number2 = float(vote_count_values[i+1])
             assert vote_number1 >= vote_number2, "test_failed"
             count = count + 1
+
+@pytest.mark.ticket_6
+def test_get_200_playlist_by_location(client):
+    response = client.get("/api/playlists?location=leeds")
+    result = create_dict(response.data)
+    array = result["playlists"]
+    for playlist in array:
+        assert playlist["location"] == "leeds", "test failed"
+
+# def test_get_200_playlist_by_location(client):
+#     response = client.get("/api/playlists?cuisine=chinese")
+
+# def test_get_200_playlist_by_location(client):
+#     response = client.get("/api/playlists?location=leeds&cuisine=chinese")
+
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
 def test_request_specific_playlist_success(client):
