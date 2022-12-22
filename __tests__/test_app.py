@@ -41,7 +41,7 @@ def test_get_playlists_keys(client):
     response = client.get("/api/playlists")
     result = create_dict(response.data)
     array = result["playlists"]
-    print(array)
+    vote_count_values = []
     assert response.status == "200 OK", "Test Failed"
     for playlist in array:
         assert 'cuisine' in playlist, "test failed"
@@ -52,6 +52,17 @@ def test_get_playlists_keys(client):
         assert 'playlist_id' in playlist, "test failed"
         assert 'vote_count' in playlist, "test failed"
         assert 'nickname' in playlist, "test failed"
+        vote_count_values.append(playlist["vote_count"])
+    assert vote_count_values == ['5.0', '4.0', '1.0'], "test failed"
+    for i in range(len(vote_count_values)):
+        vote_number = float(vote_count_values[i])
+        if vote_count_values[i] > 
+            print("its greater than or equal to")
+        
+    
+# for loop to get each value in the array
+# compare each value with the next value
+# may need to coerce into a number
     
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning

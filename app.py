@@ -16,7 +16,8 @@ def all_playlists():
         ON playlists.playlist_id = votes.playlist_id 
         LEFT JOIN users
         ON playlists.owner_email = users.user_email
-        GROUP BY playlists.playlist_id, users.nickname;
+        GROUP BY playlists.playlist_id, users.nickname
+        ORDER BY vote_count DESC;
         """)
         playlists = cursor.fetchall()
         results = json.dumps({"playlists": playlists})

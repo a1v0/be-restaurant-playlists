@@ -13,6 +13,13 @@ playlists = [
         "cuisine": "american",
         "owner_email": "ymca2@restaurant-playlists.com",
     },
+    {
+        "name": "playlist_3",
+        "description": "lorem ipsum lorem ipsum",
+        "location": "manchester",
+        "cuisine": "thai",
+        "owner_email": "ymca3@restaurant-playlists.com",
+    },
 ]
 
 users = [
@@ -26,6 +33,11 @@ users = [
         "nickname": "ymca2",
         "avatar_url": "https://images.ctfassets.net/hrltx12pl8hq/3j5RylRv1ZdswxcBaMi0y7/b84fa97296bd2350db6ea194c0dce7db/Music_Icon.jpg",
     },
+    {
+        "user_email": "ymca3@restaurant-playlists.com",
+        "nickname": "ymca3",
+        "avatar_url": "https://images.ctfassets.net/hrltx12pl8hq/3j5RylRv1ZdswxcBaMi0y7/b84fa97296bd2350db6ea194c0dce7db/Music_Icon.jpg",
+    },
 ]
 
 restaurants = [
@@ -37,4 +49,4 @@ restaurants = [
     {"playlist_id": 2, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
 ]
 
-votes = [{"playlist_id": 1, "vote_count": 4}, {"playlist_id": 2, "vote_count": 1}]
+votes = [{"playlist_id": 1, "vote_count": 5}, {"playlist_id": 2, "vote_count": 1}, {"playlist_id": 3, "vote_count": 4}]
