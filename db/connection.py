@@ -8,7 +8,6 @@ env = ".env.development"
 
 # sets environment variable in case of testing
 if "PYTEST_CURRENT_TEST" in environ:
-    # *** TO DO *** Check whether pytest actually adds this to the environment variables, or whether we need to add it manually
     env = ".env.test"
     # *** TO DO *** needs provision for production environment
 

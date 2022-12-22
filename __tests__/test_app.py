@@ -1,36 +1,33 @@
-# import os
-# import pytest
-# import sys
-# sys.path.append("../db")
+import pytest
+from db.seed import seed
+from db.seed_data.test_data import playlists, users, restaurants, votes
+from db.connection import connection, pool, cursor
+from app import app
 
-# from db.seed import seed
-# from db.seed_data.test_data import playlists, users, restaurants, votes
-# from db.connection import connection, pool
-# from app import all_playlists
 
-# seed()
+# PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
 
-# @pytest.fixture
-# def setup():
-#     # before each
-#     seed(playlists, users, restaurants, votes)
+@pytest.fixture
+def test_app():
+    test_app = app
+    test_app.config.update({
+        "TESTING": True,
+    })
+    seed(playlists, users, restaurants, votes)
+    yield test_app
 
-# @pytest.mark.usefixtures("setup")
-# def test_response(setup):
-#     input = all_playlists()
-#     assert 1 == 1, "Test Failed"
+@pytest.fixture()
+def client(test_app):
+    return test_app.test_client()
 
-import os
-import sys
+@pytest.fixture()
+def runner(test_app):
+    return test_app.test_cli_runner()
 
-# current = os.path.dirname(os.path.realpath(__file__))
+def test_request_example(client):
+    response = client.get("/api/playlists")
+    print(response.data)
+    assert response.status == "200 OK", "Test Failed"
 
-# parent = os.path.dirname(current)
 
-# sys.path.append(parent)
 
-import db
-
-import db.connection
-
-# db.seed.seed()
