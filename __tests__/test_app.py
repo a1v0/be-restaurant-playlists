@@ -3,7 +3,6 @@ from db.seed import seed
 from db.seed_data.test_data import playlists, users, restaurants, votes
 from db.connection import connection, pool, cursor
 from app import app
-import psycopg2.extras
 
 
 # PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
