@@ -131,3 +131,15 @@ def test_post_new_user_with_excess_data(client):
     assert user["user"]["nickname"] == "Myself"
     assert user["user"]["avatar_url"] == "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwlrNQyIFCa1XnXF1Ex8lSuOHhHaWxd3_zWR2m3j6Tig&s"
     assert user["user"].get("useless_property") is None 
+    
+def test_post_new_user_with_incomplete_data(client):
+    response = client.post(
+        "/api/users",
+        json={
+            "nickname": "Myself",
+        },
+    )
+    user_bytes = response.data 
+    user = json.loads(user_bytes.decode("utf-8"))
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    assert user["msg"] == "Invalid Request Body"
