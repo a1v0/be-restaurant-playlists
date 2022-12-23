@@ -150,7 +150,7 @@ def specific_playlist(playlist_id):
             """
             DELETE FROM playlists
             WHERE playlist_id = %s
-            RETURNING*;
+            RETURNING *;
         """ , (playlist_id)
         )
         deleted_playlist = cursor.fetchall()
