@@ -279,3 +279,18 @@ def test_patch_playlist(client):
     assert playlist["location"] == "somewhere"
     assert playlist["cuisine"] == "food"
     assert playlist["playlist_id"] == 1
+
+
+def test_patch_playlist_with_only_one_data_field(client):
+    response = client.patch(
+        "/api/playlists/1",
+        json={
+            "cuisine": "any kind of food",
+        },
+    )
+    playlist_bytes = response.data
+    playlist_json = json.loads(playlist_bytes.decode("utf-8"))
+    playlist = playlist_json["playlist"]
+    assert response.status == "200 OK", "incorrect http response"
+    assert playlist["playlist_id"] == 1
+    assert playlist["cuisine"] == "any kind of food"

@@ -92,20 +92,26 @@ def specific_playlist(playlist_id):
             return loaded_results
     if request.method == "PATCH":
         patch_body = request.get_json()
-        cursor.execute(
-            """
-                UPDATE playlists
-                SET name = %s, description = %s, location = %s, cuisine = %s
+        query_string = """UPDATE playlists
+        SET """
+        valid_fields = ["name", "description", "location", "cuisine"]
+
+        injected_fields = []
+        for i in range(len(valid_fields)):
+            if valid_fields[i] in patch_body:
+                query_string += f"{valid_fields[i]} = %s"
+                injected_fields.append(patch_body[valid_fields[i]])
+                if i != len(valid_fields) - 1:
+                    query_string += ", "
+
+        query_string += """
                 WHERE playlist_id = %s
                 RETURNING *;
-            """,
-            (
-                patch_body["name"],
-                patch_body["description"],
-                patch_body["location"],
-                patch_body["cuisine"],
-                playlist_id,
-            ),
+            """
+        injected_fields.append(playlist_id)
+        cursor.execute(
+            query_string,
+            injected_fields,
         )
         playlist = cursor.fetchall()
         results = json.dumps({"playlist": playlist[0]})
