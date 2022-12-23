@@ -176,7 +176,17 @@ def test_post_new_playlist(client):
         "cuisine": "Seafood",
         "owner_email": "ymca2@restaurant-playlists.com"
     })
-
+    assert response.status == "201 CREATED", "incorrect http response"
+    playlist_bytes = response.data 
+    playlist_json = json.loads(playlist_bytes.decode("utf-8"))
+    playlist = playlist_json["playlist"] 
+    assert type(playlist) == dict
+    assert playlist["name"] == "Yousif's playlist"
+    assert playlist["description"] == "My playlist nice description"
+    assert playlist["location"] == "Nice Location"
+    assert playlist["cuisine"] == "Seafood"
+    assert playlist["owner_email"] == "ymca2@restaurant-playlists.com"
+    
 
 
                     # name, description, location, cuisine, owner_email

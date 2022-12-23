@@ -7,10 +7,11 @@ app = Flask(__name__)
 CORS(app)
 
 
-@app.route("/api/playlists", methods=["GET"])
+@app.route("/api/playlists", methods=["GET", "POST"])
 def all_playlists():
     if request.method == "GET":
-        cursor.execute("""
+        cursor.execute(
+            """
         SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
         LEFT JOIN votes
         ON playlists.playlist_id = votes.playlist_id 
@@ -18,11 +19,35 @@ def all_playlists():
         ON playlists.owner_email = users.user_email
         GROUP BY playlists.playlist_id, users.nickname
         ORDER BY vote_count DESC;
-        """)
+        """
+        )
         playlists = cursor.fetchall()
         results = json.dumps({"playlists": playlists})
         loaded_results = json.loads(results)
         return loaded_results
+
+    if request.method == "POST":
+        post_body = request.get_json()
+        cursor.execute(
+            """
+        INSERT INTO playlists (name, description, location, cuisine, owner_email)
+        VALUES 
+        (%s,%s,%s,%s,%s)
+        RETURNING *;
+        """,
+            (
+                post_body["name"],
+                post_body["description"],
+                post_body["location"],
+                post_body["cuisine"],
+                post_body["owner_email"],
+            ),
+        )
+        new_playlist = cursor.fetchall()
+        results = json.dumps({"playlist": new_playlist[0]})
+        loaded_results = json.loads(results)
+        return loaded_results, 201
+
 
 
 @app.route("/api/playlists/<playlist_id>", methods=["GET"])
@@ -69,7 +94,7 @@ def users():
         or post_body.get("nickname") is None
         or post_body.get("avatar_url") is None
     ):
-        return jsonify({"msg": "Invalid Request Body"}),400
+        return jsonify({"msg": "Invalid Request Body"}), 400
 
     if request.method == "POST":
         cursor.execute(
