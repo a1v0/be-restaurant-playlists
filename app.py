@@ -36,8 +36,7 @@ def all_playlists():
             cursor.execute(
                 """
             INSERT INTO playlists (name, description, location, cuisine, owner_email)
-            VALUES 
-            (%s,%s,%s,%s,%s)
+            VALUES (%s, %s, %s, %s, %s)
             RETURNING *;
             """,
                 (
@@ -95,12 +94,11 @@ def specific_playlist(playlist_id):
         patch_body = request.get_json()
         cursor.execute(
             """
-        UPDATE playlists
-        SET name = %s, description = %s, location = %s, cuisine = %s
-        WHERE
-        playlist_id = %s
-        RETURNING *;
-        """,
+                UPDATE playlists
+                SET name = %s, description = %s, location = %s, cuisine = %s
+                WHERE playlist_id = %s
+                RETURNING *;
+            """,
             (
                 patch_body["name"],
                 patch_body["description"],
