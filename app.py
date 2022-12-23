@@ -29,6 +29,8 @@ def all_playlists():
     if request.method == "POST": 
         # Eventhough some fields are not mandatory, the front-end must always send all fields.
         post_body = request.get_json()
+        if "owner_email" not in post_body or "name" not in post_body: 
+            return return_invalid_request_body()
         cursor.execute(
             """
         INSERT INTO playlists (name, description, location, cuisine, owner_email)
@@ -95,7 +97,7 @@ def users():
         or post_body.get("nickname") is None
         or post_body.get("avatar_url") is None
     ):
-        return jsonify({"msg": "Invalid Request Body"}), 400
+        return return_invalid_request_body()
 
     if request.method == "POST":
         cursor.execute(
@@ -111,3 +113,7 @@ def users():
     results = json.dumps({"user": new_user[0]})
     loaded_results = json.loads(results)
     return loaded_results, 201
+
+# Utility functions
+def return_invalid_request_body():
+    return jsonify({"msg": "Invalid Request Body"}), 400
