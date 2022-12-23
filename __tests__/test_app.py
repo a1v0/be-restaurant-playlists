@@ -214,3 +214,16 @@ def test_post_new_playlist_with_missing_mandatory_data(client):
     msg_bytes = response.data 
     msg_json = json.loads(msg_bytes.decode("utf-8"))
     assert msg_json["msg"] == "Invalid Request Body"
+
+def test_post_new_playlist_owner_not_in_db(client):
+    response = client.post("/api/playlists", json= {
+      "name": "Yousif's playlist",
+        "description": "My playlist nice description",
+        "location": "Nice Location",
+        "cuisine": "Seafood",
+        "owner_email": "boo@restaurant-playlists.com",
+    })
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    msg_bytes = response.data 
+    msg_json = json.loads(msg_bytes.decode("utf-8"))
+    assert msg_json["msg"] == "Email address not registered"
