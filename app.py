@@ -26,7 +26,8 @@ def all_playlists():
         loaded_results = json.loads(results)
         return loaded_results
 
-    if request.method == "POST":
+    if request.method == "POST": 
+        # Eventhough some fields are not mandatory, the front-end must always send all fields.
         post_body = request.get_json()
         cursor.execute(
             """
@@ -40,7 +41,7 @@ def all_playlists():
                 post_body["description"],
                 post_body["location"],
                 post_body["cuisine"],
-                post_body["owner_email"],
+                post_body["owner_email"], 
             ),
         )
         new_playlist = cursor.fetchall()

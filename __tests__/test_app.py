@@ -202,4 +202,5 @@ def test_post_new_playlist_with_extra_info(client):
     playlist_json = json.loads(playlist_bytes.decode("utf-8"))
     playlist = playlist_json["playlist"]  
     assert "useless_property" not in playlist 
-    
+
+
