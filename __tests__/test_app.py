@@ -308,3 +308,17 @@ def test_patch_playlist_with_nonexistent_but_valid_playlist_id(client):
     msg = playlist_json["msg"]
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert msg == "playlist not found"
+
+
+def test_patch_playlist_with_invalid_playlist_id(client):
+    response = client.patch(
+        "/api/playlists/asdfjsdfkjsfh",
+        json={
+            "cuisine": "any kind of food",
+        },
+    )
+    playlist_bytes = response.data
+    playlist_json = json.loads(playlist_bytes.decode("utf-8"))
+    msg = playlist_json["msg"]
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    assert msg == "invalid playlist id"
