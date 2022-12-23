@@ -10,7 +10,8 @@ CORS(app)
 @app.route("/api/playlists", methods=["GET"])
 def all_playlists():
     if request.method == "GET":
-        cursor.execute("""
+        cursor.execute(
+            """
         SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
         LEFT JOIN votes
         ON playlists.playlist_id = votes.playlist_id 
@@ -18,14 +19,15 @@ def all_playlists():
         ON playlists.owner_email = users.user_email
         GROUP BY playlists.playlist_id, users.nickname
         ORDER BY vote_count DESC;
-        """)
+        """
+        )
         playlists = cursor.fetchall()
         results = json.dumps({"playlists": playlists})
         loaded_results = json.loads(results)
         return loaded_results
 
 
-@app.route("/api/playlists/<playlist_id>", methods=["GET"])
+@app.route("/api/playlists/<playlist_id>", methods=["GET", "PATCH"])
 def specific_playlist(playlist_id):
     try:
         int(playlist_id)
@@ -51,13 +53,35 @@ def specific_playlist(playlist_id):
             """,
             [playlist_id],
         )
-    playlist = cursor.fetchall()
-    results = json.dumps({"playlist": playlist})
-    loaded_results = json.loads(results)
-    # *** TO DO *** ensure that it's not possible to submit an empty playlist to the site, so that there will always be content to be displayed, so long as the playlist_id is valid
-    if len(loaded_results["playlist"]) == 0:
-        return jsonify({"msg": "playlist not found"}), 404
-    else:
+        playlist = cursor.fetchall()
+        results = json.dumps({"playlist": playlist})
+        loaded_results = json.loads(results)
+        # *** TO DO *** ensure that it's not possible to submit an empty playlist to the site, so that there will always be content to be displayed, so long as the playlist_id is valid
+        if len(loaded_results["playlist"]) == 0:
+            return jsonify({"msg": "playlist not found"}), 404
+        else:
+            return loaded_results
+    if request.method == "PATCH":
+        patch_body = request.get_json()
+        cursor.execute(
+            """
+        UPDATE playlists
+        SET name = %s, description = %s, location = %s, cuisine = %s
+        WHERE
+        playlist_id = %s
+        RETURNING *;
+        """,
+            (
+                patch_body["name"],
+                patch_body["description"],
+                patch_body["location"],
+                patch_body["cuisine"],
+                playlist_id
+            ),
+        )
+        playlist = cursor.fetchall()
+        results = json.dumps({"playlist": playlist[0]})
+        loaded_results = json.loads(results)
         return loaded_results
 
 
@@ -69,7 +93,7 @@ def users():
         or post_body.get("nickname") is None
         or post_body.get("avatar_url") is None
     ):
-        return jsonify({"msg": "Invalid Request Body"}),400
+        return jsonify({"msg": "Invalid Request Body"}), 400
 
     if request.method == "POST":
         cursor.execute(
