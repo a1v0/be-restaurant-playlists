@@ -20,6 +20,13 @@ playlists = [
         "cuisine": "thai",
         "owner_email": "ymca3@restaurant-playlists.com",
     },
+        {
+        "name": "playlist_4",
+        "description": "lorem ipsum lorem ipsum",
+        "location": "leeds",
+        "cuisine": "thai",
+        "owner_email": "ymca3@restaurant-playlists.com",
+    },
 ]
 
 users = [
@@ -49,4 +56,4 @@ restaurants = [
     {"playlist_id": 2, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
 ]
 
-votes = [{"playlist_id": 1, "vote_count": 5}, {"playlist_id": 2, "vote_count": 1}, {"playlist_id": 3, "vote_count": 4}]
+votes = [{"playlist_id": 1, "vote_count": 5}, {"playlist_id": 2, "vote_count": 1}, {"playlist_id": 3, "vote_count": 4}, {"playlist_id": 4, "vote_count": 0}]
