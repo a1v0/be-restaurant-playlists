@@ -146,18 +146,18 @@ def specific_playlist(playlist_id):
         return loaded_results
 
     if request.method == "DELETE":
-            cursor.execute(
-                """
-                DELETE FROM playlists
-                WHERE playlist_id = %s
-                RETURNING*;
-            """ , (playlist_id)
-            )
-            playlist = cursor.fetchall()
-            if len(playlist) == 0:
-                return jsonify({"msg": "playlist not found"}), 400
-            else:
-                return "",204
+        cursor.execute(
+            """
+            DELETE FROM playlists
+            WHERE playlist_id = %s
+            RETURNING*;
+        """ , (playlist_id)
+        )
+        deleted_playlist = cursor.fetchall()
+        if len(deleted_playlist) == 0:
+            return jsonify({"msg": "playlist not found"}), 400
+        else:
+            return "",204
 
 @app.route("/api/users", methods=["POST"])
 def users():
