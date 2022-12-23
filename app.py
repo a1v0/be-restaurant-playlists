@@ -12,6 +12,15 @@ def all_playlists():
     if request.method == "GET":
         location = request.args.get("location")
         cuisine = request.args.get("cuisine")
+
+
+        try:
+            cursor.execute("""SELECT playlists.location FROM playlists""")
+            # edit PQSL query to include a WHERE clause for location search 
+        except:
+            # deal with PSQL error or empty result here if no location exist
+            return jsonify({"msg": "invalid playlist id"}), 400
+
         sql_condition = []
         starting_query = """
                 SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
@@ -34,8 +43,11 @@ def all_playlists():
             appended_query = starting_query + """ WHERE playlists.cuisine = %s """
             sql_condition.append(cuisine)
         
-        final_query = appended_query + """GROUP BY playlists.playlist_id, users.nickname
-                ORDER BY vote_count DESC;"""
+        
+        if location or cuisine:
+            final_query = appended_query + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
+        else:
+            final_query = starting_query + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
 
         cursor.execute(final_query, sql_condition)
         playlists = cursor.fetchall()
