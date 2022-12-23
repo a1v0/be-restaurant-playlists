@@ -165,8 +165,7 @@ def test_post_new_user_with_incomplete_data(client):
     user = json.loads(user_bytes.decode("utf-8"))
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     assert user["msg"] == "Invalid Request Body"
-
-
+    
 def test_post_new_user_with_existing_email(client):
     response = client.post(
         "/api/users",
@@ -180,6 +179,64 @@ def test_post_new_user_with_existing_email(client):
     user = json.loads(user_bytes.decode("utf-8"))
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     assert user["msg"] == "UniqueViolation: email already registered"
-    
 
-# ymca@restaurant-playlists.com
+@pytest.mark.post_new_playlist  # this is showing as a warning
+def test_post_new_playlist(client):
+    response = client.post("/api/playlists", json= {
+        "name": "Yousif's playlist",
+        "description": "My playlist nice description",
+        "location": "Nice Location",
+        "cuisine": "Seafood",
+        "owner_email": "ymca2@restaurant-playlists.com"
+    })
+    assert response.status == "201 CREATED", "incorrect http response"
+    playlist_bytes = response.data 
+    playlist_json = json.loads(playlist_bytes.decode("utf-8"))
+    playlist = playlist_json["playlist"] 
+    assert type(playlist) == dict
+    assert playlist["name"] == "Yousif's playlist"
+    assert playlist["description"] == "My playlist nice description"
+    assert playlist["location"] == "Nice Location"
+    assert playlist["cuisine"] == "Seafood"
+    assert playlist["owner_email"] == "ymca2@restaurant-playlists.com"
+
+
+def test_post_new_playlist_with_extra_info(client):
+    response = client.post("/api/playlists", json= {
+        "name": "Yousif's playlist",
+        "description": "My playlist nice description",
+        "location": "Nice Location",
+        "cuisine": "Seafood",
+        "owner_email": "ymca2@restaurant-playlists.com",
+        "useless_property" : "useless info"
+    })
+    assert response.status == "201 CREATED", "incorrect http response"
+    playlist_bytes = response.data 
+    playlist_json = json.loads(playlist_bytes.decode("utf-8"))
+    playlist = playlist_json["playlist"]  
+    assert "useless_property" not in playlist 
+
+def test_post_new_playlist_with_missing_mandatory_data(client):
+    response = client.post("/api/playlists", json= {
+        "name": "Yousif's playlist",
+        "description": "My playlist nice description",
+        "location": "Nice Location",
+        "cuisine": "Seafood",
+    })
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    msg_bytes = response.data 
+    msg_json = json.loads(msg_bytes.decode("utf-8"))
+    assert msg_json["msg"] == "Invalid Request Body"
+
+def test_post_new_playlist_owner_not_in_db(client):
+    response = client.post("/api/playlists", json= {
+      "name": "Yousif's playlist",
+        "description": "My playlist nice description",
+        "location": "Nice Location",
+        "cuisine": "Seafood",
+        "owner_email": "boo@restaurant-playlists.com",
+    })
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    msg_bytes = response.data 
+    msg_json = json.loads(msg_bytes.decode("utf-8"))
+    assert msg_json["msg"] == "Email address not registered"
