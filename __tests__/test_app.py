@@ -76,6 +76,18 @@ def test_get_200_playlist_by_location(client):
         assert playlist["location"] == "leeds", "test failed"
 
 @pytest.mark.ticket_6
+def test_get_400_playlist_by_invalid_location(client):
+    response = client.get("/api/playlists?location=sdfghjkl")
+    playlistBytes = response.data
+    playlist = json.loads(playlistBytes.decode("utf-8"))
+    
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    assert playlist["msg"] == "invalid location"
+
+# @pytest.mark.ticket_6
+# def test_get_404_playlist_by_non_existant_location(client)
+
+@pytest.mark.ticket_6
 def test_get_200_playlist_by_cuisine(client):
     response = client.get("/api/playlists?cuisine=thai")
     result = create_dict(response.data)
@@ -93,6 +105,9 @@ def test_get_200_playlist_by_both(client):
     for playlist in array:
         assert playlist["location"] == "leeds", "test failed"
         assert playlist["cuisine"] == "thai", "test failed"
+
+
+
 
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
