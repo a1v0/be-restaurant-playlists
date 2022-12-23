@@ -6,20 +6,28 @@ import json
 app = Flask(__name__)
 CORS(app)
 
-
 @app.route("/api/playlists", methods=["GET"])
 def all_playlists():
     if request.method == "GET":
         location = request.args.get("location")
         cuisine = request.args.get("cuisine")
 
-
-        try:
-            cursor.execute("""SELECT playlists.location FROM playlists""")
-            # edit PQSL query to include a WHERE clause for location search 
-        except:
-            # deal with PSQL error or empty result here if no location exist
-            return jsonify({"msg": "invalid playlist id"}), 400
+        # def check_location_exists(location):
+        #     cursor.execute(
+        #         """
+        #         SELECT DISTINCT playlists.location FROM playlists
+        #         WHERE playlists.location = %s;
+        #         """, [location]
+        #         )
+        #     results = cursor.fetchall()
+        #     try:
+        #         results[0]
+        #     except:
+        #         print(results)
+        #         # deal with PSQL error or empty result here if no location exist
+        #         return jsonify({"msg": "invalid location"}), 400
+        
+        # check_location_exists(location)
 
         sql_condition = []
         starting_query = """
@@ -53,7 +61,10 @@ def all_playlists():
         playlists = cursor.fetchall()
         results = json.dumps({"playlists": playlists})
         loaded_results = json.loads(results)
-        return loaded_results, 200
+        if len(loaded_results["playlists"]) == 0:
+            return jsonify({"msg": "invalid location / cuisine tag"}), 404
+        else:
+            return loaded_results
 
 
 @app.route("/api/playlists/<playlist_id>", methods=["GET"])
