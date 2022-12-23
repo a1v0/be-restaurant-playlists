@@ -76,15 +76,12 @@ def test_get_200_playlist_by_location(client):
         assert playlist["location"] == "leeds", "test failed"
 
 @pytest.mark.ticket_6
-def test_get_404_playlist_by_invalid_location(client):
+def test_get_404_playlist_non_existent_location(client):
     response = client.get("/api/playlists?location=sdfghjkl")
     result = create_dict(response.data)
     
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
-
-# @pytest.mark.ticket_6
-# def test_get_404_playlist_by_non_existant_location(client)
 
 @pytest.mark.ticket_6
 def test_get_200_playlist_by_cuisine(client):
@@ -96,7 +93,7 @@ def test_get_200_playlist_by_cuisine(client):
         assert playlist["cuisine"] == "thai", "test failed"
 
 @pytest.mark.ticket_6
-def test_get_404_playlist_by_invalid_cuisine(client):
+def test_get_404_playlist_by_non_existent_cuisine(client):
     response = client.get("/api/playlists?cuisine=aaaaaa")
     result = create_dict(response.data)
     
@@ -114,7 +111,7 @@ def test_get_200_playlist_by_both(client):
         assert playlist["cuisine"] == "thai", "test failed"
 
 @pytest.mark.ticket_6
-def test_get_404_playlist_by_invalid_location_and_cuisine(client):
+def test_get_404_playlist_non_existent_location_and_cuisine(client):
     response = client.get("/api/playlists?location=zzzzz&cuisine=aaaaaa")
     result = create_dict(response.data)
     
@@ -122,14 +119,12 @@ def test_get_404_playlist_by_invalid_location_and_cuisine(client):
     assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
 
 @pytest.mark.ticket_6
-def test_get_404_playlist_by_valid_location_and_invalid_cuisine(client):
+def test_get_404_playlist_by_valid_location_and_non_existent_cuisine(client):
     response = client.get("/api/playlists?location=leeds&cuisine=aaaaaa")
     result = create_dict(response.data)
     
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
-
-
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
 def test_request_specific_playlist_success(client):

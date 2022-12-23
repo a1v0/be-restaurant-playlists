@@ -12,23 +12,6 @@ def all_playlists():
         location = request.args.get("location")
         cuisine = request.args.get("cuisine")
 
-        # def check_location_exists(location):
-        #     cursor.execute(
-        #         """
-        #         SELECT DISTINCT playlists.location FROM playlists
-        #         WHERE playlists.location = %s;
-        #         """, [location]
-        #         )
-        #     results = cursor.fetchall()
-        #     try:
-        #         results[0]
-        #     except:
-        #         print(results)
-        #         # deal with PSQL error or empty result here if no location exist
-        #         return jsonify({"msg": "invalid location"}), 400
-        
-        # check_location_exists(location)
-
         sql_condition = []
         starting_query = """
                 SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
