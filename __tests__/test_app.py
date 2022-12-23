@@ -391,3 +391,15 @@ def test_patch_playlist_with_invalid_playlist_id(client):
     msg = playlist_json["msg"]
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     assert msg == "invalid playlist id"
+
+# Delete tests
+
+@pytest.mark.delete_existing_playlist  # this is showing as a warning
+def test_delete_playlist_with_id(client):
+    response = client.delete("/api/playlists/1")
+    assert response.status == "204 NO CONTENT", "incorrect http response"
+
+@pytest.mark.delete_existing_playlist  # this is showing as a warning
+def test_delete_playlist_invalid_id(client):
+    response = client.delete("/api/playlists/9")
+    assert response.status == "400 BAD REQUEST", "incorrect http response"

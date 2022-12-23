@@ -80,7 +80,7 @@ def all_playlists():
             return jsonify({"msg": "Email address not registered"}), 400
 
 
-@app.route("/api/playlists/<playlist_id>", methods=["GET", "PATCH"])
+@app.route("/api/playlists/<playlist_id>", methods=["GET", "PATCH", "DELETE"])
 def specific_playlist(playlist_id):
     try:
         int(playlist_id)
@@ -145,6 +145,19 @@ def specific_playlist(playlist_id):
         loaded_results = json.loads(results)
         return loaded_results
 
+    if request.method == "DELETE":
+        cursor.execute(
+            """
+            DELETE FROM playlists
+            WHERE playlist_id = %s
+            RETURNING *;
+        """ , (playlist_id)
+        )
+        deleted_playlist = cursor.fetchall()
+        if len(deleted_playlist) == 0:
+            return jsonify({"msg": "playlist not found"}), 400
+        else:
+            return "",204
 
 @app.route("/api/users", methods=["POST"])
 def users():
