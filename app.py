@@ -20,14 +20,20 @@ def all_playlists():
                 LEFT JOIN users
                 ON playlists.owner_email = users.user_email
                 """  
-        if location: 
+                
+        if location and cuisine:
+            appended_query = starting_query + """ WHERE playlists.location = %s AND playlists.cuisine = %s """
+            sql_condition.append(location)
+            sql_condition.append(cuisine)
+            
+        elif location: 
             appended_query = starting_query + """ WHERE playlists.location = %s """
             sql_condition.append(location)
 
-        if cuisine:
+        elif cuisine:
             appended_query = starting_query + """ WHERE playlists.cuisine = %s """
             sql_condition.append(cuisine)
-
+        
         final_query = appended_query + """GROUP BY playlists.playlist_id, users.nickname
                 ORDER BY vote_count DESC;"""
 

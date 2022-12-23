@@ -84,8 +84,15 @@ def test_get_200_playlist_by_cuisine(client):
     for playlist in array:
         assert playlist["cuisine"] == "thai", "test failed"
 
-# def test_get_200_playlist_by_location(client):
-#     response = client.get("/api/playlists?location=leeds&cuisine=chinese")
+@pytest.mark.ticket_6
+def test_get_200_playlist_by_both(client):
+    response = client.get("/api/playlists?location=leeds&cuisine=thai")
+    result = create_dict(response.data)
+    array = result["playlists"]
+    assert len(array) > 0, "test failed"
+    for playlist in array:
+        assert playlist["location"] == "leeds", "test failed"
+        assert playlist["cuisine"] == "thai", "test failed"
 
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
