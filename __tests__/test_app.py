@@ -9,8 +9,6 @@ from db.seed import seed
 from db.seed_data.test_data import playlists, users, restaurants, votes
 from app import app
 import json
-from ast import literal_eval
-
 
 # PYTHONPATH=$(pwd) py.test -rP
 # <optional keyword searches with -k -v>
@@ -20,7 +18,7 @@ from ast import literal_eval
 
 
 def create_dict(byte):
-    return literal_eval(byte.decode("utf-8"))
+    return json.loads(byte.decode("utf-8"))
 
 
 # tests
@@ -73,6 +71,64 @@ def test_get_playlists_keys(client):
             assert vote_number1 >= vote_number2, "test_failed"
             count = count + 1
 
+@pytest.mark.ticket_6
+def test_get_200_playlist_by_location(client):
+    response = client.get("/api/playlists?location=leeds")
+    result = create_dict(response.data)
+    array = result["playlists"]
+    for playlist in array:
+        assert playlist["location"] == "leeds", "test failed"
+
+@pytest.mark.ticket_6
+def test_get_404_playlist_non_existent_location(client):
+    response = client.get("/api/playlists?location=sdfghjkl")
+    result = create_dict(response.data)
+    
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
+
+@pytest.mark.ticket_6
+def test_get_200_playlist_by_cuisine(client):
+    response = client.get("/api/playlists?cuisine=thai")
+    result = create_dict(response.data)
+    array = result["playlists"]
+    assert len(array) > 0, "test failed"
+    for playlist in array:
+        assert playlist["cuisine"] == "thai", "test failed"
+
+@pytest.mark.ticket_6
+def test_get_404_playlist_by_non_existent_cuisine(client):
+    response = client.get("/api/playlists?cuisine=aaaaaa")
+    result = create_dict(response.data)
+    
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
+
+@pytest.mark.ticket_6
+def test_get_200_playlist_by_both(client):
+    response = client.get("/api/playlists?location=leeds&cuisine=thai")
+    result = create_dict(response.data)
+    array = result["playlists"]
+    assert len(array) > 0, "test failed"
+    for playlist in array:
+        assert playlist["location"] == "leeds", "test failed"
+        assert playlist["cuisine"] == "thai", "test failed"
+
+@pytest.mark.ticket_6
+def test_get_404_playlist_non_existent_location_and_cuisine(client):
+    response = client.get("/api/playlists?location=zzzzz&cuisine=aaaaaa")
+    result = create_dict(response.data)
+    
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
+
+@pytest.mark.ticket_6
+def test_get_404_playlist_by_valid_location_and_non_existent_cuisine(client):
+    response = client.get("/api/playlists?location=leeds&cuisine=aaaaaa")
+    result = create_dict(response.data)
+    
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
 def test_request_specific_playlist_success(client):

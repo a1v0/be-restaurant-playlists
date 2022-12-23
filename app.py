@@ -11,21 +11,45 @@ CORS(app)
 @app.route("/api/playlists", methods=["GET", "POST"])
 def all_playlists():
     if request.method == "GET":
-        cursor.execute(
-            """
-        SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
-        LEFT JOIN votes
-        ON playlists.playlist_id = votes.playlist_id 
-        LEFT JOIN users
-        ON playlists.owner_email = users.user_email
-        GROUP BY playlists.playlist_id, users.nickname
-        ORDER BY vote_count DESC;
-        """
-        )
+        location = request.args.get("location")
+        cuisine = request.args.get("cuisine")
+
+        sql_condition = []
+        starting_query = """
+                SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
+                LEFT JOIN votes
+                ON playlists.playlist_id = votes.playlist_id 
+                LEFT JOIN users
+                ON playlists.owner_email = users.user_email
+                """  
+                
+        if location and cuisine:
+            appended_query = starting_query + """ WHERE playlists.location = %s AND playlists.cuisine = %s """
+            sql_condition.append(location)
+            sql_condition.append(cuisine)
+            
+        elif location: 
+            appended_query = starting_query + """ WHERE playlists.location = %s """
+            sql_condition.append(location)
+
+        elif cuisine:
+            appended_query = starting_query + """ WHERE playlists.cuisine = %s """
+            sql_condition.append(cuisine)
+        
+        
+        if location or cuisine:
+            final_query = appended_query + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
+        else:
+            final_query = starting_query + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
+
+        cursor.execute(final_query, sql_condition)
         playlists = cursor.fetchall()
         results = json.dumps({"playlists": playlists})
         loaded_results = json.loads(results)
-        return loaded_results
+        if len(loaded_results["playlists"]) == 0:
+            return jsonify({"msg": "invalid location / cuisine tag"}), 404
+        else:
+            return loaded_results
 
     if request.method == "POST":
         # Eventhough some fields are not mandatory, the front-end must always send all fields.
