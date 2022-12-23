@@ -27,17 +27,16 @@ def all_playlists():
         loaded_results = json.loads(results)
         return loaded_results
 
-    if request.method == "POST": 
+    if request.method == "POST":
         # Eventhough some fields are not mandatory, the front-end must always send all fields.
         post_body = request.get_json()
-        if "owner_email" not in post_body or "name" not in post_body: 
+        if "owner_email" not in post_body or "name" not in post_body:
             return return_invalid_request_body()
-        try: 
+        try:
             cursor.execute(
                 """
             INSERT INTO playlists (name, description, location, cuisine, owner_email)
-            VALUES 
-            (%s,%s,%s,%s,%s)
+            VALUES (%s, %s, %s, %s, %s)
             RETURNING *;
             """,
                 (
@@ -45,7 +44,7 @@ def all_playlists():
                     post_body["description"],
                     post_body["location"],
                     post_body["cuisine"],
-                    post_body["owner_email"], 
+                    post_body["owner_email"],
                 ),
             )
             new_playlist = cursor.fetchall()
@@ -53,11 +52,11 @@ def all_playlists():
             loaded_results = json.loads(results)
             return loaded_results, 201
 
-        except psycopg2.errors.ForeignKeyViolation: 
-            return jsonify({"msg":"Email address not registered"}), 400
+        except psycopg2.errors.ForeignKeyViolation:
+            return jsonify({"msg": "Email address not registered"}), 400
 
 
-@app.route("/api/playlists/<playlist_id>", methods=["GET"])
+@app.route("/api/playlists/<playlist_id>", methods=["GET", "PATCH"])
 def specific_playlist(playlist_id):
     try:
         int(playlist_id)
@@ -83,13 +82,43 @@ def specific_playlist(playlist_id):
             """,
             [playlist_id],
         )
-    playlist = cursor.fetchall()
-    results = json.dumps({"playlist": playlist})
-    loaded_results = json.loads(results)
-    # *** TO DO *** ensure that it's not possible to submit an empty playlist to the site, so that there will always be content to be displayed, so long as the playlist_id is valid
-    if len(loaded_results["playlist"]) == 0:
-        return jsonify({"msg": "playlist not found"}), 404
-    else:
+        playlist = cursor.fetchall()
+        results = json.dumps({"playlist": playlist})
+        loaded_results = json.loads(results)
+        # *** TO DO *** ensure that it's not possible to submit an empty playlist to the site, so that there will always be content to be displayed, so long as the playlist_id is valid
+        if len(loaded_results["playlist"]) == 0:
+            return jsonify({"msg": "playlist not found"}), 404
+        else:
+            return loaded_results
+    if request.method == "PATCH":
+        patch_body = request.get_json()
+        query_string = """UPDATE playlists
+        SET """
+        valid_fields = ["name", "description", "location", "cuisine"]
+
+        injected_fields = []
+        for i in range(len(valid_fields)):
+            if valid_fields[i] in patch_body:
+                query_string += f"{valid_fields[i]} = %s"
+                injected_fields.append(patch_body[valid_fields[i]])
+                if i != len(valid_fields) - 1:
+                    query_string += ", "
+
+        query_string += """
+                WHERE playlist_id = %s
+                RETURNING *;
+            """
+        injected_fields.append(playlist_id)
+        cursor.execute(
+            query_string,
+            injected_fields,
+        )
+        playlist = cursor.fetchall()
+        try:
+            results = json.dumps({"playlist": playlist[0]})
+        except IndexError:
+            return jsonify({"msg": "playlist not found"}), 404
+        loaded_results = json.loads(results)
         return loaded_results
 
 
@@ -104,7 +133,7 @@ def users():
         return return_invalid_request_body()
 
     if request.method == "POST":
-        try: 
+        try:
             cursor.execute(
                 """
             INSERT INTO users (user_email, nickname, avatar_url)
@@ -112,15 +141,20 @@ def users():
             (%s,%s,%s)
             RETURNING *;
             """,
-                (post_body["user_email"], post_body["nickname"], post_body["avatar_url"]),
+                (
+                    post_body["user_email"],
+                    post_body["nickname"],
+                    post_body["avatar_url"],
+                ),
             )
             new_user = cursor.fetchall()
             results = json.dumps({"user": new_user[0]})
             loaded_results = json.loads(results)
             return loaded_results, 201
         except psycopg2.errors.UniqueViolation:
-            return jsonify({"msg": "UniqueViolation: email already registered"}),400
-            
+            return jsonify({"msg": "UniqueViolation: email already registered"}), 400
+
+
 # Utility functions
 def return_invalid_request_body():
     return jsonify({"msg": "Invalid Request Body"}), 400
