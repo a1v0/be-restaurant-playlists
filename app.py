@@ -104,20 +104,23 @@ def users():
         return return_invalid_request_body()
 
     if request.method == "POST":
-        cursor.execute(
-            """
-        INSERT INTO users (user_email, nickname, avatar_url)
-        VALUES
-        (%s,%s,%s)
-        RETURNING *;
-        """,
-            (post_body["user_email"], post_body["nickname"], post_body["avatar_url"]),
-        )
-    new_user = cursor.fetchall()
-    results = json.dumps({"user": new_user[0]})
-    loaded_results = json.loads(results)
-    return loaded_results, 201
-
+        try: 
+            cursor.execute(
+                """
+            INSERT INTO users (user_email, nickname, avatar_url)
+            VALUES
+            (%s,%s,%s)
+            RETURNING *;
+            """,
+                (post_body["user_email"], post_body["nickname"], post_body["avatar_url"]),
+            )
+            new_user = cursor.fetchall()
+            results = json.dumps({"user": new_user[0]})
+            loaded_results = json.loads(results)
+            return loaded_results, 201
+        except psycopg2.errors.UniqueViolation:
+            return jsonify({"msg": "UniqueViolation: email already registered"}),400
+            
 # Utility functions
 def return_invalid_request_body():
     return jsonify({"msg": "Invalid Request Body"}), 400

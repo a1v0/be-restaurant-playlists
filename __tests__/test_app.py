@@ -165,7 +165,20 @@ def test_post_new_user_with_incomplete_data(client):
     user = json.loads(user_bytes.decode("utf-8"))
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     assert user["msg"] == "Invalid Request Body"
-
+    
+def test_post_new_user_with_existing_email(client):
+    response = client.post(
+        "/api/users",
+        json={
+            "user_email": "ymca@restaurant-playlists.com",
+            "nickname": "Myself",
+            "avatar_url": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSwlrNQyIFCa1XnXF1Ex8lSuOHhHaWxd3_zWR2m3j6Tig&s",
+        },
+    )
+    user_bytes = response.data
+    user = json.loads(user_bytes.decode("utf-8"))
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    assert user["msg"] == "UniqueViolation: email already registered"
 
 @pytest.mark.post_new_playlist  # this is showing as a warning
 def test_post_new_playlist(client):
