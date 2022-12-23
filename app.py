@@ -114,7 +114,10 @@ def specific_playlist(playlist_id):
             injected_fields,
         )
         playlist = cursor.fetchall()
-        results = json.dumps({"playlist": playlist[0]})
+        try:
+            results = json.dumps({"playlist": playlist[0]})
+        except IndexError:
+            return jsonify({"msg": "playlist not found"}), 404
         loaded_results = json.loads(results)
         return loaded_results
 

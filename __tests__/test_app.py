@@ -294,3 +294,17 @@ def test_patch_playlist_with_only_one_data_field(client):
     assert response.status == "200 OK", "incorrect http response"
     assert playlist["playlist_id"] == 1
     assert playlist["cuisine"] == "any kind of food"
+
+
+def test_patch_playlist_with_nonexistent_but_valid_playlist_id(client):
+    response = client.patch(
+        "/api/playlists/100000",
+        json={
+            "cuisine": "any kind of food",
+        },
+    )
+    playlist_bytes = response.data
+    playlist_json = json.loads(playlist_bytes.decode("utf-8"))
+    msg = playlist_json["msg"]
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    assert msg == "playlist not found"
