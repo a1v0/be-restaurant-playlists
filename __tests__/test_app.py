@@ -186,7 +186,20 @@ def test_post_new_playlist(client):
     assert playlist["location"] == "Nice Location"
     assert playlist["cuisine"] == "Seafood"
     assert playlist["owner_email"] == "ymca2@restaurant-playlists.com"
+
+
+def test_post_new_playlist_with_extra_info(client):
+    response = client.post("/api/playlists", json= {
+        "name": "Yousif's playlist",
+        "description": "My playlist nice description",
+        "location": "Nice Location",
+        "cuisine": "Seafood",
+        "owner_email": "ymca2@restaurant-playlists.com",
+        "useless_property" : "useless info"
+    })
+    assert response.status == "201 CREATED", "incorrect http response"
+    playlist_bytes = response.data 
+    playlist_json = json.loads(playlist_bytes.decode("utf-8"))
+    playlist = playlist_json["playlist"]  
+    assert "useless_property" not in playlist 
     
-
-
-                    # name, description, location, cuisine, owner_email
