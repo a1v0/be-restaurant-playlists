@@ -15,7 +15,7 @@ playlists = [
     },
     {
         "name": "Cyrus's playlist",
-        "description": "lorem ipsum lorem ipsum",
+        "description": "A wonderful, whimsical, magical playlist of Manchester's finest Thai joints. Don't miss out!",
         "location": "manchester",
         "cuisine": "thai",
         "owner_email": "ymca3@restaurant-playlists.com",
