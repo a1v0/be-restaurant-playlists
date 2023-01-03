@@ -20,6 +20,34 @@ playlists = [
         "cuisine": "thai",
         "owner_email": "ymca3@restaurant-playlists.com",
     },
+    {
+        "name": "Pizz-a me, Mario!",
+        "description": "The best Italian food this side of Capri!",
+        "cuisine": "italian",
+        "location": "",
+        "owner_email": "ymca3@restaurant-playlists.com",
+    },
+    {
+        "name": "Biryani? More like very yummy!",
+        "cuisine": "indian",
+        "location": "leeds",
+        "description": "",
+        "owner_email": "ymca3@restaurant-playlists.com",
+    },
+    {
+        "name": "Murder on the Oriental Express! An Udon-it!",
+        "cuisine": "japanese",
+        "location": "",
+        "owner_email": "ymca3@restaurant-playlists.com",
+        "description": "",
+    },
+    {
+        "name": "Chez Rif de Nottingham",
+        "cuisine": "french",
+        "description": "C'est absolument déliceux, vous savez? Notts's greatest French food.",
+        "location": "nottingham",
+        "owner_email": "ymca3@restaurant-playlists.com",
+    },
 ]
 
 users = [
@@ -50,6 +78,14 @@ restaurants = [
     {"playlist_id": 3, "place_id": "ChIJP8J3ZIVeeUgRlzmWlDEjXPc"},
     {"playlist_id": 3, "place_id": "ChIJK9qnyBlceUgR0ahqyr73-qs"},
     {"playlist_id": 3, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
+    {"playlist_id": 4, "place_id": "ChIJK9qnyBlceUgR0ahqyr73-qs"},
+    {"playlist_id": 4, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
+    {"playlist_id": 5, "place_id": "ChIJK9qnyBlceUgR0ahqyr73-qs"},
+    {"playlist_id": 5, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
+    {"playlist_id": 6, "place_id": "ChIJK9qnyBlceUgR0ahqyr73-qs"},
+    {"playlist_id": 6, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
+    {"playlist_id": 7, "place_id": "ChIJK9qnyBlceUgR0ahqyr73-qs"},
+    {"playlist_id": 7, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
 ]
 
 votes = [
