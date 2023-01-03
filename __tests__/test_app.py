@@ -400,6 +400,20 @@ def test_delete_playlist_with_id(client):
     assert response.status == "204 NO CONTENT", "incorrect http response"
 
 @pytest.mark.delete_existing_playlist  # this is showing as a warning
+def test_delete_playlist_non_existing_id(client):
+    response = client.delete("/api/playlists/5000")
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    msg_bytes = response.data
+    msg_json = json.loads(msg_bytes.decode("utf-8"))
+    msg = msg_json["msg"]
+    assert msg == "playlist not found"
+
+
+@pytest.mark.delete_existing_playlist  # this is showing as a warning
 def test_delete_playlist_invalid_id(client):
-    response = client.delete("/api/playlists/9")
+    response = client.delete("/api/playlists/oeirjg32")
     assert response.status == "400 BAD REQUEST", "incorrect http response"
+    msg_bytes = response.data
+    msg_json = json.loads(msg_bytes.decode("utf-8"))
+    msg = msg_json["msg"]
+    assert msg == "invalid playlist id"
