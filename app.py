@@ -16,7 +16,7 @@ def all_playlists():
 
         sql_condition = []
         starting_query = """
-                SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count FROM playlists
+                SELECT playlists.playlist_id, playlists.name, playlists.description, playlists.location, playlists.cuisine, users.nickname, CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count, COUNT(votes.vote_count) AS total_votes FROM playlists
                 LEFT JOIN votes
                 ON playlists.playlist_id = votes.playlist_id 
                 LEFT JOIN users

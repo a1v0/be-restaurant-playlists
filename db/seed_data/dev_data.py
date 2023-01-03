@@ -49,4 +49,4 @@ restaurants = [
     {"playlist_id": 2, "place_id": "ChIJmWR08-5deUgRIPZKe0zjFEg"},
 ]
 
-votes = [{"playlist_id": 1, "vote_count": 5}, {"playlist_id": 2, "vote_count": 1}, {"playlist_id": 3, "vote_count": 4}]
+votes = [{"playlist_id": 1, "vote_count": 5}, {"playlist_id": 1, "vote_count": 3}, {"playlist_id": 2, "vote_count": 1}, {"playlist_id": 3, "vote_count": 4}]
