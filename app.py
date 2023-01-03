@@ -151,11 +151,11 @@ def specific_playlist(playlist_id):
             DELETE FROM playlists
             WHERE playlist_id = %s
             RETURNING *;
-        """ , (playlist_id)
+        """ , [playlist_id]
         )
         deleted_playlist = cursor.fetchall()
         if len(deleted_playlist) == 0:
-            return jsonify({"msg": "playlist not found"}), 400
+            return jsonify({"msg": "playlist not found"}), 404
         else:
             return "",204
 
@@ -195,3 +195,7 @@ def users():
 # Utility functions
 def return_invalid_request_body():
     return jsonify({"msg": "Invalid Request Body"}), 400
+
+
+
+# comment
