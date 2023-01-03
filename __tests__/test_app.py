@@ -62,6 +62,7 @@ def test_get_playlists_keys(client):
         assert "owner_email" not in playlist, "test failed"
         assert "playlist_id" in playlist, "test failed"
         assert "vote_count" in playlist, "test failed"
+        assert "total_votes" in playlist, "test failed"
         assert "nickname" in playlist, "test failed"
         vote_count_values.append(playlist["vote_count"])
     for i in range(len(vote_count_values)):
