@@ -431,8 +431,8 @@ def test_delete_playlist_invalid_id(client):
     assert msg == "invalid playlist id"
 
 
-@pytest.mark.playlist_by_user  # this is showing as a warning
-def test_get_playlist_by_user(client):
+@pytest.mark.playlists_by_user  # this is showing as a warning
+def test_get_playlists_by_user(client):
     response = client.get("/api/users/ymca@restaurant-playlists.com/playlists")
     assert response.status == "200 OK", "incorrect http response"
     result = create_dict(response.data)
@@ -456,3 +456,12 @@ def test_get_playlist_by_user(client):
             vote_number2 = float(vote_count_values[i + 1])
             assert vote_number1 >= vote_number2, "test_failed"
             count = count + 1
+
+
+@pytest.mark.playlists_by_user  # this is showing as a warning
+def test_get_playlists_by_nonexistent_user(client):
+    response = client.get("/api/users/23456789098765434567890987654rtyu/playlists")
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    result = create_dict(response.data)
+    msg = result["msg"]
+    assert msg == "user not found"
