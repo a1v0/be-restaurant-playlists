@@ -231,13 +231,11 @@ def playlists_by_user(user_email):
     loaded_results = json.loads(results)
     return loaded_results, 200
 
-@app.route("/api/votes", methods=['POST'])
+
+@app.route("/api/votes", methods=["POST"])
 def votes():
     post_body = request.get_json()
-    if (
-        post_body.get("playlist_id") is None
-        or post_body.get("vote_count") is None
-    ):
+    if post_body.get("playlist_id") is None or post_body.get("vote_count") is None:
         return return_invalid_request_body()
 
     if request.method == "POST":
@@ -261,9 +259,10 @@ def votes():
         except psycopg2.errors.ForeignKeyViolation:
             return jsonify({"msg": "playlist does not exist"}), 400
 
+
 @app.route("/api/playlists/<playlist_id>/restaurants", methods=["POST"])
 def post_restaurants(playlist_id):
-    try: 
+    try:
         post_body = request.get_json()
         place_ids = post_body["place_ids"]
         query_string = """
@@ -278,16 +277,27 @@ def post_restaurants(playlist_id):
 
         query_string += """ RETURNING *; """
 
-        cursor.execute(
-            query_string, place_ids
-        )
+        cursor.execute(query_string, place_ids)
 
         new_restaurants = cursor.fetchall()
-        results = json.dumps({ "restaurants": new_restaurants })
+        results = json.dumps({"restaurants": new_restaurants})
         loaded_results = json.loads(results)
         return loaded_results, 201
     except psycopg2.errors.ForeignKeyViolation:
         return {"msg": "playlist does not exist"}, 400
+
+
+@app.route("/api/playlists/<playlist_id>/restaurants/<place_id>", methods=["DELETE"])
+def delete_restaurant_from_playlist(playlist_id, place_id):
+    cursor.execute(
+        """
+            DELETE FROM restaurants
+            WHERE playlist_id = %s
+            AND place_id = %s;
+        """,
+        (playlist_id, place_id),
+    )
+    return "", 204
 
 
 # Utility functions
