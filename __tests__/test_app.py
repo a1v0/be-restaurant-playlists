@@ -532,7 +532,6 @@ def test_post_restaurants_invalid_playlist(client):
     restaurants_bytes = response.data
     restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
     msg = restaurants_json["msg"]
-
     assert msg == "playlist does not exist"
 
 
@@ -540,3 +539,15 @@ def test_post_restaurants_invalid_playlist(client):
 def test_delete_restaurant_by_place_id_and_playlist_id(client):
     response = client.delete("/api/playlists/1/restaurants/ChIJ3-SMG6FeeUgRGKtBhlH0fhY")
     assert response.status == "204 NO CONTENT", "incorrect http response"
+
+
+@pytest.mark.restaurants_by_playlist_id
+def test_delete_restaurant_by_place_id_and_invalid_playlist_id(client):
+    response = client.delete(
+        "/api/playlists/1000/restaurants/ChIJ3-SMG6FeeUgRGKtBhlH0fhY"
+    )
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    restaurants_bytes = response.data
+    restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
+    msg = restaurants_json["msg"]
+    assert msg == "item not found"
