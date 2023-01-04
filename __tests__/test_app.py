@@ -469,6 +469,37 @@ def test_get_playlists_by_user(client):
 #     msg = result["msg"]
 #     assert msg == "user not found"
 
+@pytest.mark.ticket_14_post_new_vote
+def test_post_new_votes_happy_path(client):
+    response = client.post(
+        "/api/votes",
+        json={
+            "playlist_id": 1,
+            "vote_count": 2,
+        },
+    )
+    assert response.status == "201 CREATED", "incorrect http response"
+    votes_bytes = response.data
+    votes_json = json.loads(votes_bytes.decode("utf-8"))
+    votes = votes_json["votes"]
+    assert type(votes) == list
+    assert votes[0]["playlist_id"] == 1
+    assert votes[0]["vote_count"] == 2
+
+@pytest.mark.ticket_14_post_new_vote
+def test_post_new_votes_invalid_playlist_id(client):
+    response = client.post(
+        "/api/votes",
+        json={
+            "playlist_id": 1000,
+            "vote_count": 2,
+        },
+    )
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    msg_bytes = response.data
+    msg_json = json.loads(msg_bytes.decode("utf-8"))
+    msg = msg_json["msg"]
+
 
 @pytest.mark.restaurants_by_playlist_id
 def test_post_restaurants_happy_path(client):
@@ -496,4 +527,5 @@ def test_post_restaurants_invalid_playlist(client):
     restaurants_bytes = response.data
     restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
     msg = restaurants_json["msg"]
+
     assert msg == "playlist does not exist"

@@ -231,6 +231,36 @@ def playlists_by_user(user_email):
     loaded_results = json.loads(results)
     return loaded_results, 200
 
+@app.route("/api/votes", methods=['POST'])
+def votes():
+    post_body = request.get_json()
+    if (
+        post_body.get("playlist_id") is None
+        or post_body.get("vote_count") is None
+    ):
+        return return_invalid_request_body()
+
+    if request.method == "POST":
+        try:
+            cursor.execute(
+                """
+            INSERT INTO votes (playlist_id, vote_count)
+            VALUES
+            (%s,%s)
+            RETURNING *;
+            """,
+                (
+                    post_body["playlist_id"],
+                    post_body["vote_count"],
+                ),
+            )
+            new_votes = cursor.fetchall()
+            results = json.dumps({"votes": new_votes})
+            loaded_results = json.loads(results)
+            return loaded_results, 201
+        except psycopg2.errors.ForeignKeyViolation:
+            return jsonify({"msg": "playlist does not exist"}), 400
+
 @app.route("/api/playlists/<playlist_id>/restaurants", methods=["POST"])
 def post_restaurants(playlist_id):
     try: 
@@ -258,6 +288,7 @@ def post_restaurants(playlist_id):
         return loaded_results, 201
     except psycopg2.errors.ForeignKeyViolation:
         return {"msg": "playlist does not exist"}, 400
+
 
 # Utility functions
 def return_invalid_request_body():
