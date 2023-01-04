@@ -231,6 +231,30 @@ def playlists_by_user(user_email):
     loaded_results = json.loads(results)
     return loaded_results, 200
 
+@app.route("/api/playlists/<playlist_id>/restaurants", methods=["POST"])
+def post_restaurants(playlist_id):
+    post_body = request.get_json()
+    place_ids = post_body["place_ids"]
+    query_string = """
+        INSERT INTO restaurants (playlist_id, place_id)
+        VALUES
+        """
+    for i in range(len(place_ids)):
+        if i == len(place_ids) - 1:
+            query_string += f""" ( {playlist_id}, %s) """
+        else:
+            query_string += f""" ( {playlist_id}, %s), """
+
+    query_string += """ RETURNING *; """
+
+    cursor.execute(
+        query_string, place_ids
+    )
+
+    new_restaurants = cursor.fetchall()
+    results = json.dumps({ "restaurants": new_restaurants })
+    loaded_results = json.loads(results)
+    return loaded_results, 201
 
 # Utility functions
 def return_invalid_request_body():
