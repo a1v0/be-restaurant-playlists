@@ -44,7 +44,7 @@ playlists = [
     {
         "name": "Chez Rif de Nottingham",
         "cuisine": "french",
-        "description": "C'est absolument déliceux, vous savez? Notts's greatest French food.",
+        "description": "C'est absolument délicieux, vous savez? Notts's greatest French food.",
         "location": "nottingham",
         "owner_email": "ymca3@restaurant-playlists.com",
     },
