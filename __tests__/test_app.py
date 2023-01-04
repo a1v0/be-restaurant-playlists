@@ -499,4 +499,33 @@ def test_post_new_votes_invalid_playlist_id(client):
     msg_bytes = response.data
     msg_json = json.loads(msg_bytes.decode("utf-8"))
     msg = msg_json["msg"]
+
+
+@pytest.mark.restaurants_by_playlist_id
+def test_post_restaurants_happy_path(client):
+    response = client.post(
+        "/api/playlists/1/restaurants", json={
+            "place_ids": ["ChIJP8J3ZIVeeUgRlzmWlDEjXPc", "ChIJmWR08-5deUgRIPZKe0zjFEg"]
+        }
+    )
+    assert response.status == "201 CREATED", "incorrect http response"
+    restaurants_bytes = response.data
+    restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
+    restaurants = restaurants_json["restaurants"]
+    assert type(restaurants) == list
+    assert len(restaurants) == 2
+    assert restaurants[0]["place_id"] ==  "ChIJP8J3ZIVeeUgRlzmWlDEjXPc"
+
+@pytest.mark.restaurants_by_playlist_id
+def test_post_restaurants_invalid_playlist(client):
+    response = client.post(
+        "/api/playlists/1000/restaurants", json={
+            "place_ids": ["ChIJP8J3ZIVeeUgRlzmWlDEjXPc", "ChIJmWR08-5deUgRIPZKe0zjFEg"]
+        }
+    )
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
+    restaurants_bytes = response.data
+    restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
+    msg = restaurants_json["msg"]
+
     assert msg == "playlist does not exist"
