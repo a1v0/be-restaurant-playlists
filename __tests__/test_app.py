@@ -487,7 +487,7 @@ def test_post_new_votes_happy_path(client):
     assert votes[0]["vote_count"] == 2
 
 @pytest.mark.ticket_14_post_new_vote
-def test_post_new_votes_non_existent_playlist_id(client):
+def test_post_new_votes_incorrect_playlist_id(client):
     response = client.post(
         "/api/votes",
         json={
@@ -495,7 +495,7 @@ def test_post_new_votes_non_existent_playlist_id(client):
             "vote_count": 2,
         },
     )
-    assert response.status == "404 NOT FOUND", "incorrect http response"
+    assert response.status == "400 BAD REQUEST", "incorrect http response"
     msg_bytes = response.data
     msg_json = json.loads(msg_bytes.decode("utf-8"))
     msg = msg_json["msg"]
