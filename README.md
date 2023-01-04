@@ -1,47 +1,56 @@
-# be-restaurant-playlists
+# Munchify Backend API
 
-Sleigh-ers final project backend repo
+## Summary
 
-Team Members
-Y, M, C, A
+||||
+|-|-|-|
+|**Hosted URL**|:|tbc|
+|**Minimum Python version**|:|3.8.10|
+|**Minimum PostgreSQL version**|:|12.12|
 
-An app for Foodies
+This API is the backend for our Munchify website for restaurant playlists. It's a collaboration between `yos244`, `moshkh`, `Cnmoosavinia` and `a1v0`, aka YMCA.
 
-- Make eat-lists of all the food places on your radar
-- Find inspiration from other users eat-lists
+The API's database includes tables of playlists, restaurants, users and votes.
 
 ## Installation Process
 
-Install the virtual environment for Python (venv):
+After you have cloned the repo from GitHub, install the virtual environment for Python (`venv`):
 
-```shell
-python3 -m venv venv
-. venv/bin/activate
+```bash
+python3 -m venv venv # installs venv
+. venv/bin/activate # activates the venv
 ```
 
-Use this command to install the required packages
+Use this command to install the required packages:
 
 ```shell
 python -m pip install -r requirements.txt
 ```
 
-Confirm that `Flask` and `psycopg2` are installed.
+Confirm that `Flask` and `psycopg2` are installed, by running:
 
-## New Packages
+```shell
+pip show psycopg2-binary
+flask --version
+```
 
-When installing new packages, update the requirements file by running this command
+### Installing New Packages
+
+If installing new packages, update the requirements file by running this command:
 
 ```shell
 python -m pip freeze > requirements.txt
 ```
 
-## Setting environment variables
+## Seeding the database
+
+### Setting environment variables
 
 Create two `.env` files: `.env.test` and `.env.development`.
 
 The `.development` file should contain only `PG_DATABASE=restaurant_playlists`, while `.test` should contain `PG_DATABASE=restaurant_playlists_test`
 
-## Seeding the database
+### Creating the database
 
 To create the database, run the following command in the terminal, ensuring you are in the repo's root directory:
 
@@ -49,15 +58,23 @@ To create the database, run the following command in the terminal, ensuring you 
 psql -f ./db/setup.sql
 ```
 
-## Testing db queries
+### Seeding the dev data
 
-To test a database query, run the following command in the root dir of the repo:
+The test data will be seeded automatically by PyTest, but you will need to seed the dev data yourself. Do this using:
+
+```shell
+PYTHONPATH=$(pwd) python db/run-seed.py
+```
+
+### Testing db queries
+
+To test a database query in isolation, write your query in `db/query-tester.sql` and run the following command in the root dir of the repo:
 
 ```shell
 psql -f db/query-tester.sql > db/output.txt
 ```
 
-This will put any query outputs into the text document.
+This will put any query outputs into `db/output.txt`.
 
 ## Useful Flask Commands
 
@@ -69,17 +86,17 @@ Use this command when running the flask app to enable auto-refresh of any change
 flask --app <example_app.py> --debug run
 ```
 
-## PyTest Notes
+## PyTest
 
 ### Running a test
 
 To run a test, you must be in the root directory and you must use this command:
 
 ```shell
-$ PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
+PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
 ```
 
-Pytest by default has access only to its own directory. The command above allows it access to all files in the root
+PyTest by default has access only to its own directory. The command above allows it access to all files in the root.
 
 ### Preparing a test
 
@@ -155,4 +172,4 @@ def supply_url():
 ```
 
 Check out this link for further details:
-https://www.guru99.com/pytest-tutorial.html#4
+<https://www.guru99.com/pytest-tutorial.html#4>
