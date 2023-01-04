@@ -72,6 +72,7 @@ def test_get_playlists_keys(client):
             assert vote_number1 >= vote_number2, "test_failed"
             count = count + 1
 
+
 @pytest.mark.ticket_6
 def test_get_200_playlist_by_location(client):
     response = client.get("/api/playlists?location=leeds")
@@ -80,13 +81,15 @@ def test_get_200_playlist_by_location(client):
     for playlist in array:
         assert playlist["location"] == "leeds", "test failed"
 
+
 @pytest.mark.ticket_6
 def test_get_404_playlist_non_existent_location(client):
     response = client.get("/api/playlists?location=sdfghjkl")
     result = create_dict(response.data)
-    
+
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
+
 
 @pytest.mark.ticket_6
 def test_get_200_playlist_by_cuisine(client):
@@ -97,13 +100,15 @@ def test_get_200_playlist_by_cuisine(client):
     for playlist in array:
         assert playlist["cuisine"] == "thai", "test failed"
 
+
 @pytest.mark.ticket_6
 def test_get_404_playlist_by_non_existent_cuisine(client):
     response = client.get("/api/playlists?cuisine=aaaaaa")
     result = create_dict(response.data)
-    
+
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
+
 
 @pytest.mark.ticket_6
 def test_get_200_playlist_by_both(client):
@@ -115,21 +120,24 @@ def test_get_200_playlist_by_both(client):
         assert playlist["location"] == "leeds", "test failed"
         assert playlist["cuisine"] == "thai", "test failed"
 
+
 @pytest.mark.ticket_6
 def test_get_404_playlist_non_existent_location_and_cuisine(client):
     response = client.get("/api/playlists?location=zzzzz&cuisine=aaaaaa")
     result = create_dict(response.data)
-    
+
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
+
 
 @pytest.mark.ticket_6
 def test_get_404_playlist_by_valid_location_and_non_existent_cuisine(client):
     response = client.get("/api/playlists?location=leeds&cuisine=aaaaaa")
     result = create_dict(response.data)
-    
+
     assert response.status == "404 NOT FOUND", "incorrect http response"
     assert result["msg"] == "invalid location / cuisine tag", "incorrect msg"
+
 
 @pytest.mark.request_specific_playlist  # this is showing as a warning
 def test_request_specific_playlist_success(client):
@@ -393,12 +401,15 @@ def test_patch_playlist_with_invalid_playlist_id(client):
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     assert msg == "invalid playlist id"
 
+
 # Delete tests
+
 
 @pytest.mark.delete_existing_playlist  # this is showing as a warning
 def test_delete_playlist_with_id(client):
     response = client.delete("/api/playlists/1")
     assert response.status == "204 NO CONTENT", "incorrect http response"
+
 
 @pytest.mark.delete_existing_playlist  # this is showing as a warning
 def test_delete_playlist_non_existing_id(client):
@@ -408,7 +419,7 @@ def test_delete_playlist_non_existing_id(client):
     msg_json = json.loads(msg_bytes.decode("utf-8"))
     msg = msg_json["msg"]
     assert msg == "playlist not found"
-# 21
+
 
 @pytest.mark.delete_existing_playlist  # this is showing as a warning
 def test_delete_playlist_invalid_id(client):
@@ -419,4 +430,41 @@ def test_delete_playlist_invalid_id(client):
     msg = msg_json["msg"]
     assert msg == "invalid playlist id"
 
-    # 
+
+@pytest.mark.playlists_by_user  # this is showing as a warning
+def test_get_playlists_by_user(client):
+    response = client.get("/api/users/ymca@restaurant-playlists.com/playlists")
+    assert response.status == "200 OK", "incorrect http response"
+    result = create_dict(response.data)
+    array = result["playlists"]
+    vote_count_values = []
+    count = 0
+    for playlist in array:
+        assert "cuisine" in playlist, "test failed"
+        assert "description" in playlist, "test failed"
+        assert "location" in playlist, "test failed"
+        assert "name" in playlist, "test failed"
+        assert "owner_email" not in playlist, "test failed"
+        assert "playlist_id" in playlist, "test failed"
+        assert "vote_count" in playlist, "test failed"
+        assert "total_votes" in playlist, "test failed"
+        assert "nickname" in playlist, "test failed"
+        vote_count_values.append(playlist["vote_count"])
+    for i in range(len(vote_count_values)):
+        if count != len(vote_count_values) - 1:
+            vote_number1 = float(vote_count_values[i])
+            vote_number2 = float(vote_count_values[i + 1])
+            assert vote_number1 >= vote_number2, "test_failed"
+            count = count + 1
+
+
+# we'll never get a 404 from this test, unless we add a potentially unnecessary extra db request. The DB query finds no results for an invalid email but doesn't think this is a problem.
+# in theory, we'll only (for now) be making a request to see the logged-in user's playlists. Since you can't be logged in if your email isn't in the DB, this shouldn't cause an issue
+
+# @pytest.mark.playlists_by_user  # this is showing as a warning
+# def test_get_playlists_by_nonexistent_user(client):
+#     response = client.get("/api/users/23456789098765434567890987654rtyu/playlists")
+#     assert response.status == "404 NOT FOUND", "incorrect http response"
+#     result = create_dict(response.data)
+#     msg = result["msg"]
+#     assert msg == "user not found"
