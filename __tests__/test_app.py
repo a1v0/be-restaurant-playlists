@@ -487,7 +487,7 @@ def test_post_new_votes_happy_path(client):
     assert votes[0]["vote_count"] == 2
 
 @pytest.mark.ticket_14_post_new_vote
-def test_post_new_votes_incorrect_playlist_id(client):
+def test_post_new_votes_invalid_playlist_id(client):
     response = client.post(
         "/api/votes",
         json={

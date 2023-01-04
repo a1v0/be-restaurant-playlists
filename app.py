@@ -258,8 +258,8 @@ def votes():
             results = json.dumps({"votes": new_votes})
             loaded_results = json.loads(results)
             return loaded_results, 201
-        except psycopg2.errors.UniqueViolation:
-            return jsonify({"msg": "UniqueViolation: email already registered"}), 400
+        except psycopg2.errors.ForeignKeyViolation:
+            return jsonify({"msg": "playlist does not exist"}), 400
 
 # Utility functions
 def return_invalid_request_body():
