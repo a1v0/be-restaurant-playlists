@@ -202,6 +202,37 @@ def users():
             return jsonify({"msg": "UniqueViolation: email already registered"}), 400
 
 
+@app.route("/api/users/<user_email>/playlists", methods=["GET"])
+def playlists_by_user(user_email):
+    if request.method == "GET":
+        cursor.execute(
+            """
+            SELECT
+                playlists.playlist_id, 
+                playlists.name, 
+                playlists.description, 
+                playlists.location, 
+                playlists.cuisine, 
+                users.nickname, 
+                CAST(CAST(AVG(votes.vote_count) AS DECIMAL(10, 1)) AS VARCHAR(4)) AS vote_count, 
+                COUNT(votes.vote_count) AS total_votes
+            FROM playlists
+            LEFT JOIN votes
+            ON playlists.playlist_id = votes.playlist_id 
+            LEFT JOIN users
+            ON playlists.owner_email = users.user_email
+            WHERE playlists.owner_email = %s
+            GROUP BY playlists.playlist_id, users.nickname
+            ORDER BY vote_count DESC;
+            """,
+            [user_email],
+        )
+        playlists = cursor.fetchall()
+        results = json.dumps({"playlists": playlists})
+        loaded_results = json.loads(results)
+        return loaded_results, 200
+
+
 # Utility functions
 def return_invalid_request_body():
     return jsonify({"msg": "Invalid Request Body"}), 400
