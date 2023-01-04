@@ -21,26 +21,34 @@ def all_playlists():
                 ON playlists.playlist_id = votes.playlist_id 
                 LEFT JOIN users
                 ON playlists.owner_email = users.user_email
-                """  
-                
+                """
+
         if location and cuisine:
-            appended_query = starting_query + """ WHERE playlists.location = %s AND playlists.cuisine = %s """
+            appended_query = (
+                starting_query
+                + """ WHERE playlists.location = %s AND playlists.cuisine = %s """
+            )
             sql_condition.append(location)
             sql_condition.append(cuisine)
-            
-        elif location: 
+
+        elif location:
             appended_query = starting_query + """ WHERE playlists.location = %s """
             sql_condition.append(location)
 
         elif cuisine:
             appended_query = starting_query + """ WHERE playlists.cuisine = %s """
             sql_condition.append(cuisine)
-        
-        
+
         if location or cuisine:
-            final_query = appended_query + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
+            final_query = (
+                appended_query
+                + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
+            )
         else:
-            final_query = starting_query + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
+            final_query = (
+                starting_query
+                + """GROUP BY playlists.playlist_id, users.nickname ORDER BY vote_count DESC;"""
+            )
 
         cursor.execute(final_query, sql_condition)
         playlists = cursor.fetchall()
@@ -151,13 +159,15 @@ def specific_playlist(playlist_id):
             DELETE FROM playlists
             WHERE playlist_id = %s
             RETURNING *;
-        """ , [playlist_id]
+        """,
+            [playlist_id],
         )
         deleted_playlist = cursor.fetchall()
         if len(deleted_playlist) == 0:
             return jsonify({"msg": "playlist not found"}), 404
         else:
-            return "",204
+            return "", 204
+
 
 @app.route("/api/users", methods=["POST"])
 def users():
@@ -195,7 +205,3 @@ def users():
 # Utility functions
 def return_invalid_request_body():
     return jsonify({"msg": "Invalid Request Body"}), 400
-
-
-
-# comment
