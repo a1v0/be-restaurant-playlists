@@ -421,9 +421,6 @@ def test_delete_playlist_non_existing_id(client):
     assert msg == "playlist not found"
 
 
-# 21
-
-
 @pytest.mark.delete_existing_playlist  # this is showing as a warning
 def test_delete_playlist_invalid_id(client):
     response = client.delete("/api/playlists/oeirjg32")
@@ -432,3 +429,30 @@ def test_delete_playlist_invalid_id(client):
     msg_json = json.loads(msg_bytes.decode("utf-8"))
     msg = msg_json["msg"]
     assert msg == "invalid playlist id"
+
+
+@pytest.mark.playlist_by_user  # this is showing as a warning
+def test_get_playlist_by_user(client):
+    response = client.get("/api/users/:user_email/playlists")
+    assert response.status == "200 OK", "incorrect http response"
+    result = create_dict(response.data)
+    array = result["playlists"]
+    vote_count_values = []
+    count = 0
+    for playlist in array:
+        assert "cuisine" in playlist, "test failed"
+        assert "description" in playlist, "test failed"
+        assert "location" in playlist, "test failed"
+        assert "name" in playlist, "test failed"
+        assert "owner_email" not in playlist, "test failed"
+        assert "playlist_id" in playlist, "test failed"
+        assert "vote_count" in playlist, "test failed"
+        assert "total_votes" in playlist, "test failed"
+        assert "nickname" in playlist, "test failed"
+        vote_count_values.append(playlist["vote_count"])
+    for i in range(len(vote_count_values)):
+        if count != len(vote_count_values) - 1:
+            vote_number1 = float(vote_count_values[i])
+            vote_number2 = float(vote_count_values[i + 1])
+            assert vote_number1 >= vote_number2, "test_failed"
+            count = count + 1
