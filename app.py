@@ -293,11 +293,16 @@ def delete_restaurant_from_playlist(playlist_id, place_id):
         """
             DELETE FROM restaurants
             WHERE playlist_id = %s
-            AND place_id = %s;
+            AND place_id = %s
+            RETURNING *;
         """,
         (playlist_id, place_id),
     )
-    return "", 204
+    deleted_restaurants = cursor.fetchall()
+    if len(deleted_restaurants) == 0:
+        return jsonify({"msg": "item not found"}), 404
+    else:
+        return "", 204
 
 
 # Utility functions
