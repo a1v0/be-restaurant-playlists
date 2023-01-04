@@ -433,7 +433,7 @@ def test_delete_playlist_invalid_id(client):
 
 @pytest.mark.playlist_by_user  # this is showing as a warning
 def test_get_playlist_by_user(client):
-    response = client.get("/api/users/:user_email/playlists")
+    response = client.get("/api/users/ymca@restaurant-playlists.com/playlists")
     assert response.status == "200 OK", "incorrect http response"
     result = create_dict(response.data)
     array = result["playlists"]
