@@ -469,8 +469,8 @@ def test_get_playlists_by_user(client):
 #     msg = result["msg"]
 #     assert msg == "user not found"
 
-@pytest.mark.post_new_vote
-def test_post_new_votes(client):
+@pytest.mark.ticket_14_post_new_vote
+def test_post_new_votes_happy_path(client):
     response = client.post(
         "/api/votes",
         json={
@@ -482,6 +482,7 @@ def test_post_new_votes(client):
     votes_bytes = response.data
     votes_json = json.loads(votes_bytes.decode("utf-8"))
     votes = votes_json["votes"]
-    assert type(votes) == dict
-    assert votes["playlist_id"] == 1
-    assert votes["vote_count"] == 2
+    assert type(votes) == list
+    assert votes[0]["playlist_id"] == 1
+    assert votes[0]["vote_count"] == 2
+

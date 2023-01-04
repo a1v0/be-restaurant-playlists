@@ -254,8 +254,8 @@ def votes():
                     post_body["vote_count"],
                 ),
             )
-            new_user = cursor.fetchall()
-            results = json.dumps({"user": new_user[0]})
+            new_votes = cursor.fetchall()
+            results = json.dumps({"votes": new_votes})
             loaded_results = json.loads(results)
             return loaded_results, 201
         except psycopg2.errors.UniqueViolation:
