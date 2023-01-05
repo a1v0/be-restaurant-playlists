@@ -469,6 +469,7 @@ def test_get_playlists_by_user(client):
 #     msg = result["msg"]
 #     assert msg == "user not found"
 
+
 @pytest.mark.ticket_14_post_new_vote
 def test_post_new_votes_happy_path(client):
     response = client.post(
@@ -485,6 +486,7 @@ def test_post_new_votes_happy_path(client):
     assert type(votes) == list
     assert votes[0]["playlist_id"] == 1
     assert votes[0]["vote_count"] == 2
+
 
 @pytest.mark.ticket_14_post_new_vote
 def test_post_new_votes_invalid_playlist_id(client):
@@ -504,9 +506,10 @@ def test_post_new_votes_invalid_playlist_id(client):
 @pytest.mark.restaurants_by_playlist_id
 def test_post_restaurants_happy_path(client):
     response = client.post(
-        "/api/playlists/1/restaurants", json={
+        "/api/playlists/1/restaurants",
+        json={
             "place_ids": ["ChIJP8J3ZIVeeUgRlzmWlDEjXPc", "ChIJmWR08-5deUgRIPZKe0zjFEg"]
-        }
+        },
     )
     assert response.status == "201 CREATED", "incorrect http response"
     restaurants_bytes = response.data
@@ -514,18 +517,37 @@ def test_post_restaurants_happy_path(client):
     restaurants = restaurants_json["restaurants"]
     assert type(restaurants) == list
     assert len(restaurants) == 2
-    assert restaurants[0]["place_id"] ==  "ChIJP8J3ZIVeeUgRlzmWlDEjXPc"
+    assert restaurants[0]["place_id"] == "ChIJP8J3ZIVeeUgRlzmWlDEjXPc"
+
 
 @pytest.mark.restaurants_by_playlist_id
 def test_post_restaurants_invalid_playlist(client):
     response = client.post(
-        "/api/playlists/1000/restaurants", json={
+        "/api/playlists/1000/restaurants",
+        json={
             "place_ids": ["ChIJP8J3ZIVeeUgRlzmWlDEjXPc", "ChIJmWR08-5deUgRIPZKe0zjFEg"]
-        }
+        },
     )
     assert response.status == "400 BAD REQUEST", "incorrect http response"
     restaurants_bytes = response.data
     restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
     msg = restaurants_json["msg"]
-
     assert msg == "playlist does not exist"
+
+
+@pytest.mark.restaurants_by_playlist_id
+def test_delete_restaurant_by_place_id_and_playlist_id(client):
+    response = client.delete("/api/playlists/1/restaurants/ChIJ3-SMG6FeeUgRGKtBhlH0fhY")
+    assert response.status == "204 NO CONTENT", "incorrect http response"
+
+
+@pytest.mark.restaurants_by_playlist_id
+def test_delete_restaurant_by_place_id_and_invalid_playlist_id(client):
+    response = client.delete(
+        "/api/playlists/1000/restaurants/ChIJ3-SMG6FeeUgRGKtBhlH0fhY"
+    )
+    assert response.status == "404 NOT FOUND", "incorrect http response"
+    restaurants_bytes = response.data
+    restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
+    msg = restaurants_json["msg"]
+    assert msg == "item not found"
