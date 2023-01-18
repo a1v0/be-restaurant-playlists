@@ -4,7 +4,7 @@
 
 ||||
 |-|-|-|
-|**Hosted URL**|:|tbc|
+|**Hosted URL**|:|<https://munchify-be.onrender.com/api>|
 |**Minimum Python version**|:|3.8.10|
 |**Minimum PostgreSQL version**|:|12.12|
 
@@ -16,7 +16,7 @@ The API's database includes tables of playlists, restaurants, users and votes.
 
 After you have cloned the repo from GitHub, install the virtual environment for Python (`venv`):
 
-```bash
+```shell
 python3 -m venv venv # installs venv
 . venv/bin/activate # activates the venv
 ```
@@ -93,7 +93,7 @@ flask --app <example_app.py> --debug run
 To run a test, you must be in the root directory and you must use this command:
 
 ```shell
-PYTHONPATH=$(pwd) py.test <optional keyword searches with -k -v>
+PYTHONPATH=$(pwd) py.test <-k optional keyword searches -v>
 ```
 
 PyTest by default has access only to its own directory. The command above allows it access to all files in the root.
@@ -130,13 +130,13 @@ def test_file2_method1():
     x = 5
     y = 6
     assert x + 1 == y, "test failed"
-    assert x == y, "test failed because x=" + str(x) + " y=" + str(y)
+    assert x == y, "test failed because x = " + str(x) + " y = " + str(y)
 
 @pytest.mark.set1
 def test_file2_method2():
-    x=5
-    y=6
-    assert x+1 == y,"test failed"
+    x = 5
+    y = 6
+    assert x + 1 == y, "test failed"
 ```
 
 Run `py.test -m set1`. This will run the methods `test_file1_method1`, `test_file2_method1`, `test_file2_method2`.
