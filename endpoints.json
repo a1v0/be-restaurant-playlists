@@ -1,0 +1,66 @@
+{
+    "GET /api": {
+        "description": "serves up a json representation of all the available endpoints of the api"
+    },
+    "GET /api/playlists": {
+        "description": "serves all playlist",
+        "queries": ["location", "cuisine"],
+        "exampleResponse": {
+            "playlists": {
+                "playlist_id": 1,
+                "name": "Playlist",
+                "description": "",
+                "location": "newcastle",
+                "nickname": "username",
+                "vote_count": 4.5,
+                "total_votes": 10
+            }
+        }
+    },
+    "POST /api/playlists": {
+        "description": "adds new playlist to database",
+        "exampleInput": {
+            "name": "name",
+            "description": "description",
+            "location": "newcastle",
+            "cuisine": "chinese",
+            "owner_email": "abc@xyz.com"
+        }
+    },
+    "GET /api/playlists/<playlist_id>": {
+        "description": "returns specific playlist"
+    },
+    "PATCH /api/playlists/<playlist_id>": {
+        "description": "amends record in database",
+        "permittedFields": ["name", "description", "location", "cuisine"]
+    },
+    "DELETE /api/playlists/<playlist_id>": {
+        "description": "deletes specified playlist"
+    },
+    "POST /api/users": {
+        "description": "adds new user to database",
+        "exampleInput": {
+            "user_email": "abc@xyz.com",
+            "nickname": "username",
+            "avatur_url": "https://..."
+        }
+    },
+    "GET /api/users/<user_email>/playlists": {
+        "description": "retrieves list of playlists by specified user"
+    },
+    "POST /api/votes": {
+        "description": "adds a score out of five to specified playlist",
+        "exampleInput": { "playlist_id": 1, "vote_count": 3 }
+    },
+    "POST /api/playlists/<playlist_id>/restaurants": {
+        "description": "retrieves all restaurants contained within specified playlist",
+        "exampleResponse": {
+            "restaurants": [
+                { "playlist_id": 1, "place_id": "ChIJ3-SMG6FeeUgRGKtBhlH0fhY" }
+            ]
+        }
+    },
+    "DELETE /api/playlists/<playlist_id>/restaurants/<place_id>": {
+        "description": "removes specified restaurant from specified playlist"
+    }
+}

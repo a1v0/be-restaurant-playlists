@@ -551,3 +551,12 @@ def test_delete_restaurant_by_place_id_and_invalid_playlist_id(client):
     restaurants_json = json.loads(restaurants_bytes.decode("utf-8"))
     msg = restaurants_json["msg"]
     assert msg == "item not found"
+
+
+@pytest.mark.api_endpoint
+def test_get_api_info(client):
+    response = client.get("/api")
+    assert response.status == "200 OK"
+    api_bytes = response.data
+    api_json = json.loads(api_bytes.decode("utf-8"))
+    assert "endpoints" in api_json
