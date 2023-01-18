@@ -4,6 +4,7 @@ from dotenv import dotenv_values
 import psycopg2.extras
 import urllib.parse as up
 
+# environ["ENVIRONMENT"] = ".env.production"
 env = environ["ENVIRONMENT"] if "ENVIRONMENT" in environ else ".env.development"
 
 # sets environment variable in case of testing
