@@ -8,6 +8,13 @@ app = Flask(__name__)
 CORS(app)
 
 
+@app.route("/api", methods=["GET"])
+def api_endpoint():
+    json_file = open("endpoints.json")
+    json_data = json.load(json_file)
+    return {"endpoints": json_data}, 200
+
+
 @app.route("/api/playlists", methods=["GET", "POST"])
 def all_playlists():
     if request.method == "GET":
