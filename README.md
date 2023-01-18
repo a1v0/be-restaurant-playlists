@@ -63,7 +63,7 @@ psql -f ./db/setup.sql
 The test data will be seeded automatically by PyTest, but you will need to seed the dev data yourself. Do this using:
 
 ```shell
-PYTHONPATH=$(pwd) python db/run-seed.py
+PYTHONPATH=$(pwd) python db/run_seed.py
 ```
 
 ### Testing db queries
