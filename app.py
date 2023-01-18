@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, request
+from flask import Flask, jsonify, request, redirect
 from db.connection import connection, cursor
 from flask_cors import CORS
 import json
@@ -6,6 +6,11 @@ import psycopg2.errors
 
 app = Flask(__name__)
 CORS(app)
+
+
+@app.route("/", methods=["GET"])
+def redirect_to_api():
+    return redirect("/api", code=308)
 
 
 @app.route("/api", methods=["GET"])
@@ -129,6 +134,7 @@ def specific_playlist(playlist_id):
             return jsonify({"msg": "playlist not found"}), 404
         else:
             return loaded_results
+
     if request.method == "PATCH":
         patch_body = request.get_json()
         query_string = """UPDATE playlists
