@@ -5,6 +5,7 @@
 ||||
 |-|-|-|
 |**Hosted URL**|:|<https://munchify-be.onrender.com/api>|
+|**Frontend URL**|:|<https://munchify.onrender.com/>|
 |**Minimum Python version**|:|3.8.10|
 |**Minimum PostgreSQL version**|:|12.12|
 
