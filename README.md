@@ -2,12 +2,13 @@
 
 ## Summary
 
-||||
-|-|-|-|
-|**Hosted URL**|:|<https://munchify-be.onrender.com/api>|
-|**Frontend URL**|:|<https://munchify.onrender.com/>|
-|**Minimum Python version**|:|3.8.10|
-|**Minimum PostgreSQL version**|:|12.12|
+|                                |   |                                                    |
+| ------------------------------ | - | -------------------------------------------------- |
+| **Hosted URL**                 | : | <https://munchify-be.onrender.com/api>             |
+| **Frontend URL**               | : | <https://munchify.onrender.com/>                   |
+| **Frontend Repo**              | : | <https://github.com/a1v0/fe-restaurant-playlists/> |
+| **Minimum Python version**     | : | 3.8.10                                             |
+| **Minimum PostgreSQL version** | : | 12.12                                              |
 
 This API is the backend for our Munchify website for restaurant playlists. It's a collaboration between `yos244`, `moshkh`, `Cnmoosavinia` and `a1v0`, aka YMCA.
 
